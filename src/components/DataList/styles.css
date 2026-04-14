@@ -1,0 +1,20 @@
+[popover] {
+  opacity: 0;
+  transform: translateY(0px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    display 0.2s allow-discrete;
+}
+
+[popover]:popover-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@starting-style {
+  [popover]:popover-open {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
