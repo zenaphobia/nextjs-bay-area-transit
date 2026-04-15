@@ -2,6 +2,7 @@ import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import "./styles.css";
 import { twMerge } from "tailwind-merge";
+import { Button } from "../ui/button";
 
 type Props = {
   id: string;
@@ -37,12 +38,9 @@ const DataList = memo(function DataList({ items, onChange, id }: Props) {
   return (
     <div className="p-2 w-full top-4 absolute left-0 overflow-hidden">
       <div className="w-full p-2 relative">
-        <button
-          popoverTarget="station_list"
-          className="w-full cursor-pointer px-2 py-1 shadow-md bg-background rounded-full text-white active:bg-white/80 transition-all border border-white/25"
-        >
+        <Button className="dark w-full" popoverTarget="station_list">
           Find Station
-        </button>
+        </Button>
         <motion.div
           ref={popoverRef}
           className="w-[80%] shadow-sm space-y-4 left-1/2 -translate-x-1/2 top-20 bg-background border border-white/25 rounded-md text-white p-2"

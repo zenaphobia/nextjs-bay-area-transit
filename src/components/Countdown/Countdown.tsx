@@ -88,7 +88,7 @@ const Countdown = memo(function Countdown({
     timeLeft && (
       <div
         className={twJoin(
-          "bg-secondary/75 text-primary grid items-center -mr-6 auto-cols-max grid-flow-col p-4 text-center font-bold transition-opacity",
+          "text-primary grid items-center -mr-6 auto-cols-max grid-flow-col p-4 text-center font-bold transition-opacity",
           timerDone && "opacity-25",
         )}
       >

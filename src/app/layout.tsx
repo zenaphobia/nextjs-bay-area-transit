@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const jetbrainsMonoHeading = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-heading",
+});
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const jetBrainsMono = JetBrains_Mono({
   variable: "--font-jetBrains-mono",
@@ -20,7 +28,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jetBrainsMono.variable} h-full antialiased overflow-hidden`}
+      className={cn(
+        "h-full",
+        "antialiased",
+        "overflow-hidden",
+        jetBrainsMono.variable,
+        "font-sans",
+        inter.variable,
+        jetbrainsMonoHeading.variable,
+        "dark",
+      )}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
