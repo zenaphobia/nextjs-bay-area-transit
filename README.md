@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bay Area Transit Application
 
-## Getting Started
+A real-time BART transit tracker built with React, TypeScript, and Next.js. This project pairs the 511 MTC API's GTFS Realtime feed with an interactive map and stop-centric departure UI.
 
-First, run the development server:
+> **Status:** Work-in-progress. Core architecture is in place; trip planning and final polish are underway.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Frontend:** React · TypeScript · Next.js · Framer Motion · Tailwind CSS
+- **Map:** react-zoom-pan-pinch
+- **Backend:** Cloudflare Worker proxying GTFS Realtime protobuf data
+- **Routing:** OpenTripPlanner (GraphQL) with BART GTFS Static + OSM data
+- **Deployment:** Netlify
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Live departure cards** — stop-centric view showing all upcoming arrivals across lines, with time-based card states (hero countdown ≤ 5 min, compact displays absolute time)
+- **Interactive BART map** — drag, pinch, and zoom with graphic fade-in/fade-out animation for better visibility
+- **Real-time polling** — `useTransitFeed` hook drives efficient protobuf polling via Cloudflare Worker
 
-## Learn More
+## Roadmap
 
-To learn more about Next.js, take a look at the following resources:
+### OpenTripPlanner Integration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+OTP powers the trip planning side of the app. Remaining work:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [ ] Finalize GraphQL query and validate response data on the frontend
+- [ ] Build trip planner view from Adobe XD mockups
+- [ ] Integrate on-device persistent storage for saved trips
+- [ ] Deploy OTP server (Fly.io)
 
-## Deploy on Vercel
+### Map Polish
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The BART map is interactive but needs refinement:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Add per-stop click handlers to surface departures in the UI
+- [ ] Expand map viewport for mobile so routes aren't clipped
+
+### Final UX Pass
+
+Once individual views are solid, take a holistic pass at the user flow, transitions between stops, trip planning, and the 3D hero scene. Make sure everything feels cohesive.
