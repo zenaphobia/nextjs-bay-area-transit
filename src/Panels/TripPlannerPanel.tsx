@@ -120,7 +120,7 @@ const SaveTripButton = memo(function SaveTripButton({
       {isSaved ? (
         <Button
           disabled={!originStation || !destinationStation}
-          onClick={handleSave}
+          onClick={() => handleSave()}
           size="lg"
           className="flex flex-1"
           variant={"outline"}
