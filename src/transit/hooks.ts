@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { fetchFeed } from "./utils";
 import { transit_realtime } from "gtfs-realtime-bindings";
 
@@ -36,7 +36,29 @@ export function useTransitFeed() {
   const [stops, setStops] = useState<TransitContent>();
   const [loaded, setLoaded] = useState(false);
 
-  async function getFeed() {
+  const filterDeparted = useCallback(
+    (trams: Omit<transit_realtime.FeedMessage, "toJSON">) => {
+      const now = Date.now();
+      return {
+        ...trams,
+        entity: trams.entity.map((entity) => {
+          if (!entity.tripUpdate?.stopTimeUpdate) return entity;
+          return {
+            ...entity,
+            tripUpdate: {
+              ...entity.tripUpdate,
+              stopTimeUpdate: entity.tripUpdate.stopTimeUpdate.filter(
+                (stu) => (stu.departure?.time as number) * 1000 - now > 0,
+              ),
+            },
+          };
+        }),
+      };
+    },
+    [],
+  );
+
+  const getFeed = useCallback(async () => {
     try {
       const [tramRes, stopRes] = await Promise.all([
         fetchFeed(`${endpoint}?type=trams`),
@@ -58,38 +80,19 @@ export function useTransitFeed() {
     } catch (e) {
       console.error("Failed to load data from API: ", e);
     }
-  }
+  }, [filterDeparted]);
 
-  function filterDeparted(trams: Omit<transit_realtime.FeedMessage, "toJSON">) {
-    const now = Date.now();
-    return {
-      ...trams,
-      entity: trams.entity.map((entity) => {
-        if (!entity.tripUpdate?.stopTimeUpdate) return entity;
-        return {
-          ...entity,
-          tripUpdate: {
-            ...entity.tripUpdate,
-            stopTimeUpdate: entity.tripUpdate.stopTimeUpdate.filter(
-              (stu) => (stu.departure?.time as number) * 1000 - now > 0,
-            ),
-          },
-        };
-      }),
-    };
-  }
+  const inflight = useRef(false);
 
-  let inflight = false;
-
-  function startPoll() {
+  const startPoll = useCallback(() => {
     console.log("Poll started");
 
     const intervalID = setInterval(async () => {
-      if (inflight) return;
+      if (inflight.current) return;
 
       try {
         console.log("Polling data");
-        inflight = true;
+        inflight.current = true;
         const res = await fetchFeed(`${endpoint}?type=trams`);
         const trams = res.toJSON() as Omit<
           transit_realtime.FeedMessage,
@@ -99,18 +102,21 @@ export function useTransitFeed() {
       } catch (err) {
         console.error("[startPoll] Failed to fetch data: ", err);
       } finally {
-        inflight = false;
+        inflight.current = false;
       }
     }, 1000 * 60);
 
     return () => clearInterval(intervalID);
-  }
+  }, [filterDeparted]);
 
-  return {
-    getFeed,
-    loaded,
-    trams,
-    stops,
-    startPoll,
-  };
+  return useMemo(
+    () => ({
+      getFeed,
+      loaded,
+      trams,
+      stops,
+      startPoll,
+    }),
+    [getFeed, loaded, trams, stops, startPoll],
+  );
 }

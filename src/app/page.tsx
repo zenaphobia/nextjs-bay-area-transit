@@ -1,11 +1,12 @@
 "use client";
-import { useTransitFeed } from "./transit/hooks";
+import { useTransitFeed } from "../transit/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { transit_realtime } from "gtfs-realtime-bindings";
-import DataList from "../components/DataList/DataList";
 import { StationTrams, Stop } from "@/types/types";
 import BartMap from "@/components/BartMap/BartMap";
 import StopPanel from "@/components/StopPanel";
+import TripPlannerPanel from "@/Panels/TripPlannerPanel";
+import ActiveTripPlanel from "@/Panels/ActiveTripPanel";
 
 export default function Page() {
   const transitFeed = useTransitFeed();
@@ -44,6 +45,7 @@ export default function Page() {
       (stop) => ({
         Name: stop.Name,
         id: stop.id,
+        Location: stop.Location,
       }),
     );
   }, [transitFeed.stops]);
@@ -92,7 +94,8 @@ export default function Page() {
     <main className="text-white overflow-hidden flex flex-col gap-8 items-center justify-center w-screen h-screen font-mono">
       {!loaded && <div>Loading...</div>}
       <BartMap />
-      <DataList id="stop-choice" items={stopList} onChange={handleSelect} />
+      <TripPlannerPanel stopList={stopList} />
+      {/* <ActiveTripPlanel /> */}
       {activeStop && <StopPanel activeStop={activeStop} />}
     </main>
   );

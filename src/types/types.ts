@@ -16,3 +16,12 @@ export type StationTrams = {
   Name: string;
   trams: Tram[];
 };
+
+export type stopList = {
+  Name: string;
+  id: string;
+  Location: {
+    Longitude: string;
+    Latitude: string;
+  };
+}[];

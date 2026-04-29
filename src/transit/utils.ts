@@ -11,9 +11,13 @@ export async function fetchFeed(url: string) {
 }
 
 export function getColorByLine(
-  line: string,
+  line: string | undefined,
   token: "bg" | "text" = "bg",
 ): string {
+  if (!line) {
+    return token === "bg" ? "bg-foreground" : "text-foreground";
+  }
+
   if (line.startsWith("Blue")) {
     return token === "bg" ? "bg-blueline" : "text-blueline";
   } else if (line.startsWith("Red")) {

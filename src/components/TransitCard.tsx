@@ -4,8 +4,8 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Tram } from "../types/types";
 import { AnimatePresence, motion } from "motion/react";
 import { twJoin, twMerge } from "tailwind-merge";
-import { getColorByLine } from "../app/transit/utils";
-import { ROUTE_TERMINUS } from "../app/transit/constants";
+import { getColorByLine } from "../transit/utils";
+import { ROUTE_TERMINUS } from "../transit/constants";
 import Countdown from "./Countdown/Countdown";
 
 const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {

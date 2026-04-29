@@ -2,7 +2,7 @@
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useEffect, useRef, useState } from "react";
 import BartMapSVG from "./bart_condensed.svg";
-import { useTransitStore } from "@/app/stores/global";
+import { useTransitStore } from "@/stores/global";
 
 export default function BartMap() {
   const svgRef = useRef<SVGElement>(null);
