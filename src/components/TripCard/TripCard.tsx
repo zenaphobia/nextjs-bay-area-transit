@@ -8,6 +8,7 @@ import { twJoin, twMerge } from "tailwind-merge";
 import { Button } from "../ui/button";
 import { getColorByLine } from "@/transit/utils";
 import Countdown, { Fragment } from "../Countdown/Countdown";
+import { useTransitStore } from "@/stores/global";
 
 type Props = {
   trip: Node;
@@ -16,6 +17,7 @@ type Props = {
 const TRIP_COUNTDOWN_FRAGMENT: Fragment[] = ["minutes", "seconds"];
 
 const TripCard = memo(function TripCard({ trip }: Props) {
+  const setActiveTrip = useTransitStore((s) => s.setActiveTrip);
   const articleRef = useRef<HTMLElement>(null);
   const [expanded, setExpanded] = useState(false);
   const departureTimeString = useMemo(
@@ -41,12 +43,16 @@ const TripCard = memo(function TripCard({ trip }: Props) {
     if (articleRef.current) {
       articleRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [articleRef.current]);
+  }, [articleRef]);
   const [departed, setDeparted] = useState(() => {
     const msUntilThreshold = departureDate.getTime() * 1000;
 
     return msUntilThreshold <= 0 ? true : false;
   });
+
+  const handleStartTrip = useCallback(() => {
+    setActiveTrip(trip);
+  }, [setActiveTrip, trip]);
 
   useEffect(() => {
     const msUntilThreshold =
@@ -167,7 +173,9 @@ const TripCard = memo(function TripCard({ trip }: Props) {
                       </div>
                     );
                   })}
-                  <Button className="w-full mt-4">Start Trip</Button>
+                  <Button onClick={handleStartTrip} className="w-full mt-4">
+                    Start Trip
+                  </Button>
                 </>
               )}
             </motion.div>

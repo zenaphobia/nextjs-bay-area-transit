@@ -7,6 +7,7 @@ import BartMap from "@/components/BartMap/BartMap";
 import StopPanel from "@/components/StopPanel";
 import TripPlannerPanel from "@/Panels/TripPlannerPanel";
 import ActiveTripPlanel from "@/Panels/ActiveTripPanel";
+import { useTransitStore } from "@/stores/global";
 
 export default function Page() {
   const transitFeed = useTransitFeed();
@@ -95,7 +96,7 @@ export default function Page() {
       {!loaded && <div>Loading...</div>}
       <BartMap />
       <TripPlannerPanel stopList={stopList} />
-      {/* <ActiveTripPlanel /> */}
+      <ActiveTripPlanel />
       {activeStop && <StopPanel activeStop={activeStop} />}
     </main>
   );
