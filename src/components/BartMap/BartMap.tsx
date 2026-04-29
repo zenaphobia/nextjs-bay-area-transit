@@ -5,7 +5,7 @@ import BartMapSVG from "./bart_condensed.svg";
 import { useTransitStore } from "@/stores/global";
 
 export default function BartMap() {
-  const svgRef = useRef<SVGElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const stations = useRef<SVGElement>(null);
   const details = useRef<SVGElement>(null);
   const [ready, setReady] = useState(false);

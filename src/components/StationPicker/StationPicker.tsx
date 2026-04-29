@@ -11,11 +11,16 @@ import { AnimatePresence, motion } from "motion/react";
 import "./styles.css";
 import { twMerge } from "tailwind-merge";
 import { Input } from "../ui/input";
-import { Stop } from "@/app/plan/page";
 import { Button } from "../ui/button";
 import { Field } from "../ui/field";
 import { ButtonGroup } from "../ui/button-group";
 import { CircleX } from "lucide-react";
+
+export type Stop = {
+  Name: string;
+  id: string;
+  Location: { Latitude: string; Longitude: string };
+};
 
 type Props = {
   id: string;

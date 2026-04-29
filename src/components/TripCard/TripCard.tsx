@@ -21,12 +21,12 @@ const TripCard = memo(function TripCard({ trip }: Props) {
   const departureTimeString = useMemo(
     () =>
       new Date(
-        trip.legs[0].from.departure.scheduledTime as string,
+        trip.legs[0].from.departure?.scheduledTime as string,
       ).toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" }),
     [trip],
   );
   const departureDate = useMemo(
-    () => new Date(trip.legs[0].from.departure.scheduledTime as string),
+    () => new Date(trip.legs[0].from.departure?.scheduledTime as string),
     [trip],
   );
   const [priority, setPriority] = useState(() => {
