@@ -10,18 +10,19 @@ import {
 import { useTransitStore } from "@/stores/global";
 import { getColorByLine } from "@/transit/utils";
 import { TramFront, Footprints } from "lucide-react";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 
 const ActiveTripPlanel = memo(function ActiveTripPanel() {
   const activeTrip = useTransitStore((s) => s.activeTrip);
   const setActiveTrip = useTransitStore((s) => s.setActiveTrip);
-  const [visible, setVisible] = useState(false);
+  const visible = useTransitStore((s) => s.activeTripPanelOpen);
+  const setVisible = useTransitStore((s) => s.setActiveTripPanelOpen);
 
   const handleCancelTrip = useCallback(() => {
     setActiveTrip(null);
     setVisible(false);
-  }, [setActiveTrip]);
+  }, [setActiveTrip, setVisible]);
 
   return (
     <Drawer open={visible} onOpenChange={setVisible}>

@@ -17,6 +17,7 @@ import {
 import { stopList } from "@/types/types";
 import { Star, TramFront, Trash } from "lucide-react";
 import { useLocalStorage } from "@/lib/hooks";
+import { useTransitStore } from "@/stores/global";
 import { SavedRoute } from "@/types/localStorage";
 import { ChevronDownIcon } from "lucide-react";
 import {
@@ -248,6 +249,8 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | unknown>(null);
   const [trips, setTrips] = useState<Edge[]>([]);
+  const plannerOpen = useTransitStore((s) => s.plannerOpen);
+  const setPlannerOpen = useTransitStore((s) => s.setPlannerOpen);
   const isDisabled = !originStation || !destinationStation || isLoading;
 
   const handleDepartingStationSelect = useCallback(
@@ -337,7 +340,7 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
   }, [originStation, destinationStation]);
 
   return (
-    <Drawer>
+    <Drawer open={plannerOpen} onOpenChange={setPlannerOpen}>
       <DrawerTrigger className="absolute left-1/2 top-8 -translate-x-1/2">
         <motion.div whileTap={{ scale: 1.1 }}>
           <div className="p-4 gap-2 flex items-center bg-background border-foreground/15 border rounded-full">

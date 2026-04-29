@@ -17,7 +17,8 @@ type Props = {
 const TRIP_COUNTDOWN_FRAGMENT: Fragment[] = ["minutes", "seconds"];
 
 const TripCard = memo(function TripCard({ trip }: Props) {
-  const setActiveTrip = useTransitStore((s) => s.setActiveTrip);
+  const startTrip = useTransitStore((s) => s.startTrip);
+  const activeTrip = useTransitStore((s) => s.activeTrip);
   const articleRef = useRef<HTMLElement>(null);
   const [expanded, setExpanded] = useState(false);
   const departureTimeString = useMemo(
@@ -51,8 +52,8 @@ const TripCard = memo(function TripCard({ trip }: Props) {
   });
 
   const handleStartTrip = useCallback(() => {
-    setActiveTrip(trip);
-  }, [setActiveTrip, trip]);
+    startTrip(trip);
+  }, [startTrip, trip]);
 
   useEffect(() => {
     const msUntilThreshold =
@@ -173,8 +174,12 @@ const TripCard = memo(function TripCard({ trip }: Props) {
                       </div>
                     );
                   })}
-                  <Button onClick={handleStartTrip} className="w-full mt-4">
-                    Start Trip
+                  <Button
+                    variant={activeTrip ? "destructive" : "default"}
+                    onClick={handleStartTrip}
+                    className="w-full mt-4"
+                  >
+                    {activeTrip ? "Start New Trip" : "Start Trip"}
                   </Button>
                 </>
               )}
