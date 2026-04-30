@@ -24,7 +24,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
     setVisible(false);
   }, [setActiveTrip, setVisible]);
 
-  const snapPoints = ["135px", 1];
+  const snapPoints = ["55px", 1];
 
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
 
@@ -41,7 +41,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
       modal={false}
     >
       <DrawerTrigger>CLick</DrawerTrigger>
-      <DrawerContent className="h-screen">
+      <DrawerContent className="h-screen font-mono">
         <DrawerHeader>
           <DrawerTitle>Current Trip</DrawerTitle>
           <DrawerDescription>
