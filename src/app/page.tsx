@@ -1,14 +1,6 @@
 "use client";
 import { useTransitFeed } from "../transit/hooks";
-import {
-  Component,
-  JSX,
-  MemoExoticComponent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { transit_realtime } from "gtfs-realtime-bindings";
 import { StationTrams, Stop } from "@/types/types";
 import BartMap from "@/components/BartMap/BartMap";
@@ -104,6 +96,7 @@ export default function Page() {
   }, [transitFeed]);
 
   const currentView = useTransitStore((s) => s.currentView);
+  const activeTrip = useTransitStore((s) => s.activeTrip);
 
   const Panel = {
     map: <BartMap />,
@@ -114,6 +107,7 @@ export default function Page() {
 
   return (
     <main className="text-white overflow-hidden flex flex-col items-center justify-center w-screen h-dvh font-mono">
+      <ActiveTripPlanel />
       <section
         className="overflow-hidden h-full w-full"
         style={{ height: "calc(100% - 44px)" }}

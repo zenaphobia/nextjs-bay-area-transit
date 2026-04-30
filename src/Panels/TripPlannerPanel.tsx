@@ -4,7 +4,7 @@ import TripCard from "@/components/TripCard/TripCard";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import type { Edge, OTPResponse } from "@/types/otp";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import { motion } from "motion/react";
 import {
   Drawer,
