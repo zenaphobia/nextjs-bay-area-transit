@@ -17,7 +17,7 @@ export const useTransitStore = create<GlobalStore>((set) => ({
   scale: 1,
   activeStop: null,
   activeTrip: null,
-  currentView: "map",
+  currentView: "trips",
   setCurrentView: (view) => set({ currentView: view }),
   setActiveTrip: (activeTrip) => set({ activeTrip }),
   setScale: (scale) => set({ scale }),

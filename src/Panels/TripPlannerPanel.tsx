@@ -261,7 +261,10 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
   }, [originStation, destinationStation]);
 
   return (
-    <section className="h-full p-4" aria-labelledby="trip-planner-title">
+    <section
+      className="p-4 pb-0 h-full flex flex-col"
+      aria-labelledby="trip-planner-title"
+    >
       <header className="p-4">
         <h2 id="trip-planner-title" className="text-lg font-semibold">
           Trip Planner
@@ -270,7 +273,7 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
           Find the best route between any two Bay Area stations.
         </p>
       </header>
-      <div className="p-4 overflow-hidden flex flex-col h-full font-mono gap-4">
+      <div className="p-4 overflow-hidden flex-1 flex flex-col font-mono gap-4">
         <section className="space-y-8 mb-8">
           <div className="space-y-4">
             <StationPicker

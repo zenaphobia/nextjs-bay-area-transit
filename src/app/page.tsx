@@ -113,12 +113,17 @@ export default function Page() {
   }[currentView];
 
   return (
-    <main className="text-white overflow-hidden flex flex-col gap-8 items-center justify-center w-screen h-screen font-mono">
+    <main className="text-white overflow-hidden flex flex-col items-center justify-center w-screen h-dvh font-mono">
       {!loaded && <div>Loading...</div>}
       {/* <TripPlannerPanel stopList={stopList} /> */}
       {/* <ActiveTripPlanel /> */}
       {/* {activeStop && <StopPanel activeStop={activeStop} />} */}
-      {Panel}
+      <section
+        className="overflow-hidden h-full"
+        style={{ height: "calc(100% - 44px)" }}
+      >
+        {Panel}
+      </section>
       <Navbar />
     </main>
   );
