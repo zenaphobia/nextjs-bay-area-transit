@@ -4,6 +4,8 @@ import { useLocalStorage } from "@/lib/hooks";
 import { SavedRoute } from "@/types/localStorage";
 import { Trash } from "lucide-react";
 import { memo, useCallback } from "react";
+import { Stop } from "./TripPlannerPanel";
+import { useTransitStore } from "@/stores/global";
 
 const LOCALSTORAGE_KEY = "savedTrips_v1";
 
@@ -26,11 +28,18 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
     [localStorage],
   );
 
+  const setOriginStation = useTransitStore((s) => s.setOriginStation);
+  const setDestinationStation = useTransitStore((s) => s.setDestinationStation);
+  const setCurrentView = useTransitStore((s) => s.setCurrentView);
+
+  const handleStationSet = (route: SavedRoute) => {
+    setOriginStation(route.origin);
+    setDestinationStation(route.destination);
+    setCurrentView("trips");
+  };
+
   return (
-    <section
-      className="font-mono h-full p-4 w-full"
-      aria-labelledby="saved-trips-title"
-    >
+    <section className="font-mono" aria-labelledby="saved-trips-title">
       <header className="p-4">
         <h2 id="saved-trips-title" className="text-lg font-semibold">
           Saved Trips
@@ -51,9 +60,14 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
                 key={route.origin.Name + route.destination.Name}
                 className="flex gap-2"
               >
-                <div className="flex-1 flex items-center px-3 rounded-md border border-foreground/10">
+                <Button
+                  onClick={() => {
+                    handleStationSet(route);
+                  }}
+                  className="flex-1 flex items-center px-3 rounded-md border border-foreground/10"
+                >
                   <span className="text-sm">{route.name}</span>
-                </div>
+                </Button>
                 <Button
                   onClick={() => handleDelete(route)}
                   variant="destructive"

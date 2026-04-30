@@ -4,7 +4,7 @@ import TripCard from "@/components/TripCard/TripCard";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import type { Edge, OTPResponse } from "@/types/otp";
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import {
   Drawer,
@@ -19,6 +19,7 @@ import { Star, TramFront } from "lucide-react";
 import { useLocalStorage } from "@/lib/hooks";
 import { SavedRoute } from "@/types/localStorage";
 import { Input } from "@/components/ui/input";
+import { useTransitStore } from "@/stores/global";
 
 export type Stop = {
   Name: string;
@@ -172,32 +173,20 @@ type Props = {
 };
 
 const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
-  const [originStation, setOriginStation] = useState<Stop>();
-  const [destinationStation, setDestinationStation] = useState<Stop>();
+  const originStation = useTransitStore((s) => s.originStation);
+  const destinationStation = useTransitStore((s) => s.destinationStation);
+  const setOriginStation = useTransitStore((s) => s.setOriginStation);
+  const setDestinationStation = useTransitStore((s) => s.setDestinationStation);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | unknown>(null);
   const [trips, setTrips] = useState<Edge[]>([]);
   const isDisabled = !originStation || !destinationStation || isLoading;
 
-  const handleDepartingStationSelect = useCallback(
-    (station: Stop | undefined) => {
-      setOriginStation(station);
-    },
-    [],
-  );
-
-  const handleDestinationStationSelect = useCallback(
-    (station: Stop | undefined) => {
-      setDestinationStation(station);
-    },
-    [],
-  );
-
   const clearTrip = useCallback(() => {
     setTrips([]);
     setOriginStation(undefined);
     setDestinationStation(undefined);
-  }, []);
+  }, [setOriginStation, setDestinationStation]);
 
   const handleFetch = useCallback(async () => {
     if (!originStation || !destinationStation) return;
@@ -281,14 +270,14 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
               value={originStation}
               items={stopList}
               id="departing"
-              onChange={handleDepartingStationSelect}
+              onChange={setOriginStation}
             />
             <StationPicker
               label="Choose Destination Station"
               value={destinationStation}
               items={stopList}
               id="destination"
-              onChange={handleDestinationStationSelect}
+              onChange={setDestinationStation}
             />
           </div>
 

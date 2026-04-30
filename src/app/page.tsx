@@ -115,7 +115,7 @@ export default function Page() {
   return (
     <main className="text-white overflow-hidden flex flex-col items-center justify-center w-screen h-dvh font-mono">
       <section
-        className="overflow-hidden h-full"
+        className="overflow-hidden h-full w-full"
         style={{ height: "calc(100% - 44px)" }}
       >
         {Panel}
