@@ -10,7 +10,7 @@ import {
 import { useTransitStore } from "@/stores/global";
 import { getColorByLine } from "@/transit/utils";
 import { TramFront, Footprints } from "lucide-react";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 
 const ActiveTripPlanel = memo(function ActiveTripPanel() {
@@ -24,24 +24,19 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
     setVisible(false);
   }, [setActiveTrip, setVisible]);
 
-  const snapPoints = ["55px", 1];
-
-  const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
-
-  useEffect(() => {
-    console.log({ snap });
-  }, [snap]);
-
   return (
-    <Drawer
-      open={Boolean(activeTrip)}
-      snapPoints={snapPoints}
-      activeSnapPoint={snap}
-      setActiveSnapPoint={setSnap}
-      modal={false}
-    >
-      <DrawerTrigger>CLick</DrawerTrigger>
-      <DrawerContent className="h-screen font-mono">
+    <Drawer open={visible} onOpenChange={setVisible}>
+      <DrawerTrigger asChild>
+        {activeTrip && (
+          <Button
+            size={"lg"}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[80%]"
+          >
+            View Active Trip
+          </Button>
+        )}
+      </DrawerTrigger>
+      <DrawerContent className="font-mono">
         <DrawerHeader>
           <DrawerTitle>Current Trip</DrawerTitle>
           <DrawerDescription>

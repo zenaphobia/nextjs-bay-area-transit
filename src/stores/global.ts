@@ -1,3 +1,4 @@
+import { View } from "@/components/Navbar/types";
 import { Node } from "@/types/otp";
 import { create } from "zustand";
 
@@ -7,6 +8,8 @@ interface GlobalStore {
   activeTrip: Node | null;
   plannerOpen: boolean;
   activeTripPanelOpen: boolean;
+  currentView: View;
+  setCurrentView: (v: View) => void;
   setActiveTrip: (trip: Node | null) => void;
   setScale: (scale: number) => void;
   setActiveStop: (stop: string | null) => void;
@@ -21,6 +24,8 @@ export const useTransitStore = create<GlobalStore>((set) => ({
   activeTrip: null,
   plannerOpen: false,
   activeTripPanelOpen: false,
+  currentView: "map",
+  setCurrentView: (view) => set({ currentView: view }),
   setActiveTrip: (activeTrip) => set({ activeTrip }),
   setScale: (scale) => set({ scale }),
   setActiveStop: (stop) => set({ activeStop: stop }),

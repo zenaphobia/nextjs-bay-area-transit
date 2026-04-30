@@ -7,7 +7,7 @@ import BartMap from "@/components/BartMap/BartMap";
 import StopPanel from "@/components/StopPanel";
 import TripPlannerPanel from "@/Panels/TripPlannerPanel";
 import ActiveTripPlanel from "@/Panels/ActiveTripPanel";
-import { useTransitStore } from "@/stores/global";
+import Navbar from "@/components/Navbar/Navbar";
 
 export default function Page() {
   const transitFeed = useTransitFeed();
@@ -95,9 +95,10 @@ export default function Page() {
     <main className="text-white overflow-hidden flex flex-col gap-8 items-center justify-center w-screen h-screen font-mono">
       {!loaded && <div>Loading...</div>}
       <BartMap />
-      <TripPlannerPanel stopList={stopList} />
-      <ActiveTripPlanel />
-      {activeStop && <StopPanel activeStop={activeStop} />}
+      {/* <TripPlannerPanel stopList={stopList} /> */}
+      {/* <ActiveTripPlanel /> */}
+      {/* {activeStop && <StopPanel activeStop={activeStop} />} */}
+      <Navbar />
     </main>
   );
 }

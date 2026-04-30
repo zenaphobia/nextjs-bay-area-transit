@@ -58,7 +58,7 @@ const GetTripsButton = memo(function GetTripsButton({
       className="w-7/8 text-md"
     >
       {isLoading && <Spinner />}
-      Get Trips
+      Find Routes
     </Button>
   );
 });
@@ -341,12 +341,11 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
 
   return (
     <Drawer open={plannerOpen} onOpenChange={setPlannerOpen}>
-      <DrawerTrigger className="absolute left-1/2 top-8 -translate-x-1/2">
+      <DrawerTrigger asChild className="absolute right-8 top-8">
         <motion.div whileTap={{ scale: 1.1 }}>
-          <div className="p-4 gap-2 flex items-center bg-background border-foreground/15 border rounded-full">
+          <Button className="rounded-full h-12 w-12" variant={"outline"}>
             <TramFront></TramFront>
-            <h4>Trip Planner</h4>
-          </div>
+          </Button>
         </motion.div>
       </DrawerTrigger>
       <DrawerContent>

@@ -24,10 +24,12 @@ A real-time BART transit tracker built with React, TypeScript, and Next.js. This
 
 OTP powers the trip planning side of the app. Remaining work:
 
-- [ ] Finalize GraphQL query and validate response data on the frontend
-- [ ] Build trip planner view from Adobe XD mockups
-- [ ] Integrate on-device persistent storage for saved trips
-- [ ] Deploy OTP server (Fly.io)
+- [x] Finalize GraphQL query and validate response data on the frontend
+- [x] Build trip planner view from Adobe XD mockups
+- [x] Integrate on-device persistent storage for saved trips
+- [x] Deploy OTP server (Fly.io)
+- [ ] Poll general alerts from 511 API and cache with KV
+- [ ] Build bottom nav bar (Map, Trips, Saved Trips, Alerts)
 
 ### Map Polish
 
