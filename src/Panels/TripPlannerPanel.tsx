@@ -20,6 +20,7 @@ import { useLocalStorage } from "@/lib/hooks";
 import { SavedRoute } from "@/types/localStorage";
 import { Input } from "@/components/ui/input";
 import { useTransitStore } from "@/stores/global";
+import { toast } from "sonner";
 
 export type Stop = {
   Name: string;
@@ -95,6 +96,8 @@ const SaveTripButton = memo(function SaveTripButton({
               destinationStation.id !== trip.destination.id,
           ),
         );
+
+        toast.success("Trip deleted!", { position: "top-center" });
       } else {
         localStorage.setValue((prev) => [
           ...prev,
@@ -105,6 +108,8 @@ const SaveTripButton = memo(function SaveTripButton({
             destination: destinationStation,
           },
         ]);
+
+        toast.success("Trip saved!", { position: "top-center" });
       }
     },
     [originStation, destinationStation, isSaved, localStorage],

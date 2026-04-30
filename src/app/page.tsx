@@ -12,6 +12,7 @@ import { View } from "@/components/Navbar/types";
 import { useTransitStore } from "@/stores/global";
 import SavedTripsPanel from "@/Panels/SavedTripsPanel";
 import AlertsPanel from "@/Panels/AlertsPanel";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Page() {
   const transitFeed = useTransitFeed();
@@ -106,15 +107,15 @@ export default function Page() {
   }[currentView];
 
   return (
-    <main className="text-white overflow-hidden flex flex-col items-center justify-center w-screen h-dvh font-mono">
-      <ActiveTripPlanel />
-      <section
-        className="overflow-hidden h-full w-full"
-        style={{ height: "calc(100% - 44px)" }}
-      >
-        {Panel}
-      </section>
-      <Navbar />
-    </main>
+    <>
+      <main className="text-white overflow-hidden flex flex-col items-center justify-center w-screen h-dvh font-mono">
+        <ActiveTripPlanel />
+        <section className="overflow-hidden flex-1 min-h-0 w-full">
+          {Panel}
+        </section>
+        <Navbar />
+      </main>
+      <Toaster />
+    </>
   );
 }

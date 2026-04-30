@@ -39,7 +39,7 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
   };
 
   return (
-    <section className="font-mono" aria-labelledby="saved-trips-title">
+    <section className="font-mono p-4" aria-labelledby="saved-trips-title">
       <header className="p-4">
         <h2 id="saved-trips-title" className="text-lg font-semibold">
           Saved Trips
