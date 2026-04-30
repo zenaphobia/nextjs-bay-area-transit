@@ -50,7 +50,7 @@ export default function BartMap() {
   }, [scale]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-screen h-screen">
       <TransformWrapper
         onTransform={(_, { scale }) => {
           setScale(Math.round(scale));

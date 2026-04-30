@@ -114,10 +114,6 @@ export default function Page() {
 
   return (
     <main className="text-white overflow-hidden flex flex-col items-center justify-center w-screen h-dvh font-mono">
-      {!loaded && <div>Loading...</div>}
-      {/* <TripPlannerPanel stopList={stopList} /> */}
-      {/* <ActiveTripPlanel /> */}
-      {/* {activeStop && <StopPanel activeStop={activeStop} />} */}
       <section
         className="overflow-hidden h-full"
         style={{ height: "calc(100% - 44px)" }}
