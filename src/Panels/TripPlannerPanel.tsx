@@ -15,16 +15,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { stopList } from "@/types/types";
-import { Star, TramFront, Trash } from "lucide-react";
+import { Star, TramFront } from "lucide-react";
 import { useLocalStorage } from "@/lib/hooks";
-import { useTransitStore } from "@/stores/global";
 import { SavedRoute } from "@/types/localStorage";
-import { ChevronDownIcon } from "lucide-react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 
 export type Stop = {
@@ -178,79 +171,12 @@ type Props = {
   stopList: stopList;
 };
 
-const SavedTripsList = memo(function SavedTripsList({
-  handleSelect,
-}: {
-  handleSelect: (trip: SavedRoute) => void;
-}) {
-  const LOCALSTORAGE_KEY = "savedTrips_v1";
-
-  const localStorage = useLocalStorage<SavedRoute[]>({
-    key: LOCALSTORAGE_KEY,
-    defaultValue: [],
-  });
-
-  const handleDelete = useCallback(
-    (passedRoute: SavedRoute) => {
-      localStorage.setValue((prev) =>
-        prev.filter(
-          (route) =>
-            route.origin.id !== passedRoute.origin.id ||
-            route.destination.id !== passedRoute.destination.id,
-        ),
-      );
-    },
-    [localStorage],
-  );
-
-  return (
-    <Collapsible className="rounded-md">
-      <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="group w-full">
-          Saved Trips
-          <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
-        </Button>
-      </CollapsibleTrigger>
-      <CollapsibleContent className="flex max-h-[150px] overflow-y-auto flex-col items-start gap-2 pt-2 text-sm overflow-hidden">
-        <ul className="w-full space-y-2">
-          {localStorage.value.length > 0 &&
-            localStorage.value.map((route) => (
-              <li key={route.origin.Name + route.destination.Name}>
-                <div className="flex gap-2">
-                  <Button
-                    className="flex-1 flex"
-                    variant="outline"
-                    onClick={() => {
-                      handleSelect(route);
-                    }}
-                  >
-                    {route.name}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleDelete(route);
-                    }}
-                    variant={"destructive"}
-                  >
-                    <Trash />
-                  </Button>
-                </div>
-              </li>
-            ))}
-        </ul>
-      </CollapsibleContent>
-    </Collapsible>
-  );
-});
-
 const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
   const [originStation, setOriginStation] = useState<Stop>();
   const [destinationStation, setDestinationStation] = useState<Stop>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | unknown>(null);
   const [trips, setTrips] = useState<Edge[]>([]);
-  const plannerOpen = useTransitStore((s) => s.plannerOpen);
-  const setPlannerOpen = useTransitStore((s) => s.setPlannerOpen);
   const isDisabled = !originStation || !destinationStation || isLoading;
 
   const handleDepartingStationSelect = useCallback(
@@ -271,11 +197,6 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
     setTrips([]);
     setOriginStation(undefined);
     setDestinationStation(undefined);
-  }, []);
-
-  const handleSelect = useCallback((stop: SavedRoute) => {
-    setOriginStation(stop.origin);
-    setDestinationStation(stop.destination);
   }, []);
 
   const handleFetch = useCallback(async () => {
@@ -340,57 +261,49 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
   }, [originStation, destinationStation]);
 
   return (
-    <Drawer open={plannerOpen} onOpenChange={setPlannerOpen}>
-      <DrawerTrigger asChild className="absolute right-8 top-8">
-        <motion.div whileTap={{ scale: 1.1 }}>
-          <Button className="rounded-full h-12 w-12" variant={"outline"}>
-            <TramFront></TramFront>
-          </Button>
-        </motion.div>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Trip Planner</DrawerTitle>
-          <DrawerDescription>
-            Find the best route between any two Bay Area stations.
-          </DrawerDescription>
-        </DrawerHeader>
-        <div className="p-4 overflow-hidden h-screen flex flex-col font-mono gap-4">
-          <section className="space-y-8 mb-8">
-            <div className="space-y-4">
-              <StationPicker
-                label="Choose Origin Station"
-                value={originStation}
-                items={stopList}
-                id="departing"
-                onChange={handleDepartingStationSelect}
-              />
-              <StationPicker
-                label="Choose Destination Station"
-                value={destinationStation}
-                items={stopList}
-                id="destination"
-                onChange={handleDestinationStationSelect}
-              />
-              <SavedTripsList handleSelect={handleSelect} />
-            </div>
+    <section className="h-full p-4" aria-labelledby="trip-planner-title">
+      <header className="p-4">
+        <h2 id="trip-planner-title" className="text-lg font-semibold">
+          Trip Planner
+        </h2>
+        <p className="text-sm opacity-75">
+          Find the best route between any two Bay Area stations.
+        </p>
+      </header>
+      <div className="p-4 overflow-hidden flex flex-col h-full font-mono gap-4">
+        <section className="space-y-8 mb-8">
+          <div className="space-y-4">
+            <StationPicker
+              label="Choose Origin Station"
+              value={originStation}
+              items={stopList}
+              id="departing"
+              onChange={handleDepartingStationSelect}
+            />
+            <StationPicker
+              label="Choose Destination Station"
+              value={destinationStation}
+              items={stopList}
+              id="destination"
+              onChange={handleDestinationStationSelect}
+            />
+          </div>
 
-            <div className="flex gap-2 items-center justify-between">
-              <GetTripsButton
-                onClick={handleFetch}
-                isDisabled={isDisabled}
-                isLoading={isLoading}
-              ></GetTripsButton>
-              <SaveTripButton
-                destinationStation={destinationStation}
-                originStation={originStation}
-              />
-            </div>
-          </section>
-          <TripSection trips={trips} />
-        </div>
-      </DrawerContent>
-    </Drawer>
+          <div className="flex gap-2 items-center justify-between">
+            <GetTripsButton
+              onClick={handleFetch}
+              isDisabled={isDisabled}
+              isLoading={isLoading}
+            ></GetTripsButton>
+            <SaveTripButton
+              destinationStation={destinationStation}
+              originStation={originStation}
+            />
+          </div>
+        </section>
+        <TripSection trips={trips} />
+      </div>
+    </section>
   );
 });
 

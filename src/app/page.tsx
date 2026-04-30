@@ -1,6 +1,14 @@
 "use client";
 import { useTransitFeed } from "../transit/hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Component,
+  JSX,
+  MemoExoticComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import type { transit_realtime } from "gtfs-realtime-bindings";
 import { StationTrams, Stop } from "@/types/types";
 import BartMap from "@/components/BartMap/BartMap";
@@ -8,6 +16,10 @@ import StopPanel from "@/components/StopPanel";
 import TripPlannerPanel from "@/Panels/TripPlannerPanel";
 import ActiveTripPlanel from "@/Panels/ActiveTripPanel";
 import Navbar from "@/components/Navbar/Navbar";
+import { View } from "@/components/Navbar/types";
+import { useTransitStore } from "@/stores/global";
+import SavedTripsPanel from "@/Panels/SavedTripsPanel";
+import AlertsPanel from "@/Panels/AlertsPanel";
 
 export default function Page() {
   const transitFeed = useTransitFeed();
@@ -91,13 +103,22 @@ export default function Page() {
     return transitFeed.startPoll();
   }, [transitFeed]);
 
+  const currentView = useTransitStore((s) => s.currentView);
+
+  const Panel = {
+    map: <BartMap />,
+    trips: <TripPlannerPanel stopList={stopList} />,
+    savedTrips: <SavedTripsPanel />,
+    alerts: <AlertsPanel />,
+  }[currentView];
+
   return (
     <main className="text-white overflow-hidden flex flex-col gap-8 items-center justify-center w-screen h-screen font-mono">
       {!loaded && <div>Loading...</div>}
-      <BartMap />
       {/* <TripPlannerPanel stopList={stopList} /> */}
       {/* <ActiveTripPlanel /> */}
       {/* {activeStop && <StopPanel activeStop={activeStop} />} */}
+      {Panel}
       <Navbar />
     </main>
   );
