@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { useTransitStore } from "@/stores/global";
+import { ROUTE_TERMINUS } from "@/transit/constants";
 import { getColorByLine } from "@/transit/utils";
 import { TramFront, Footprints } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { Separator } from "@/components/ui/separator";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { ChevronDown } from "lucide-react";
 
 const ActiveTripPlanel = memo(function ActiveTripPanel() {
   const activeTrip = useTransitStore((s) => s.activeTrip);
@@ -20,14 +23,13 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
 
   const currentLegIndex = useMemo(() => {
     if (!activeTrip?.legs) return -1;
-    let idx = -1;
+    let idx = 0;
     for (let i = 0; i < activeTrip.legs.length; i++) {
       const dep = activeTrip.legs[i].from.departure?.scheduledTime;
       if (!dep) continue;
-      console.log("idx", new Date(dep).getTime(), now);
-      if (new Date(dep).getTime() > now) {
+      console.log({ idx });
+      if (now > new Date(dep).getTime()) {
         idx = i;
-        break;
       } else break;
     }
     return idx;
@@ -67,15 +69,26 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
           onClick={() => {
             setCollapsed((prev) => !prev);
           }}
-          className="font-mono bg-secondary w-full overflow-hidden"
+          className="font-mono bg-secondary w-full overflow-hidden z-[10]"
           aria-labelledby="active-trip-title"
         >
-          <header className="p-4 w-full">
-            <h2 id="active-trip-title" className="text-lg font-semibold">
-              Current Trip
-            </h2>
-            {`${start?.name} → ${end?.name} `}
+          <header className="p-4 w-full flex justify-between items-center">
+            <div>
+              <h2 id="active-trip-title" className="text-lg font-semibold">
+                Current Trip
+              </h2>
+              {`${start?.name} → ${end?.name} `}
+            </div>
+            <ChevronDown
+              className="transition-transform"
+              style={{
+                transform: collapsed ? "rotate(0deg)" : "rotate(180deg)",
+              }}
+            />
           </header>
+
+          <Separator />
+
           <AnimatePresence initial={false}>
             {!collapsed && (
               <motion.div
@@ -110,14 +123,20 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                             isCurrent && "font-semibold",
                           )}
                         >
-                          <div className="flex flex-col items-center">
-                            <span className="shrink-0 mb-1">
+                          <div className="flex flex-col items-center pl-4">
+                            <div className="relative shrink-0 mb-1">
+                              {isCurrent && (
+                                <span className="absolute size-2">
+                                  <span className="absolute -left-4 top-1/2  inline-flex h-full w-full animate-ping rounded-full bg-greenline opacity-75"></span>
+                                  <span className="absolute -left-4 top-1/2 inline-flex size-2 rounded-full bg-greenline"></span>
+                                </span>
+                              )}
                               {l.mode === "SUBWAY" ? (
                                 <TramFront size={18} />
                               ) : (
                                 <Footprints size={18} />
                               )}
-                            </span>
+                            </div>
                             {!isLast && (
                               <div className="w-[2px] flex-1 bg-foreground/20 my-1" />
                             )}
@@ -149,13 +168,13 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                                 )}
                               />
                               <span
-                                className={getColorByLine(
-                                  l.route?.shortName,
-                                  "text",
+                                className={twMerge(
+                                  getColorByLine(l.route?.shortName, "text"),
+                                  "text-xs font-light opacity-75",
                                 )}
                               >
                                 {l.route?.shortName
-                                  ? l.route.shortName.split("-")[0] + " Line"
+                                  ? ROUTE_TERMINUS[l.route.shortName].compact
                                   : "Walk"}
                               </span>
                             </div>

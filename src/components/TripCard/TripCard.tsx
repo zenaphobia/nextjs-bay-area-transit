@@ -1,6 +1,15 @@
 "use client";
 import { Node } from "@/types/otp";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  memo,
+  MouseEvent as ReactMouseEvent,
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Card, CardContent } from "../ui/card";
 import { TramFront, Footprints } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -9,6 +18,20 @@ import { Button } from "../ui/button";
 import { getColorByLine } from "@/transit/utils";
 import Countdown, { Fragment } from "../Countdown/Countdown";
 import { useTransitStore } from "@/stores/global";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 type Props = {
   trip: Node;
@@ -53,6 +76,7 @@ const TripCard = memo(function TripCard({ trip }: Props) {
 
   const handleStartTrip = useCallback(() => {
     setActiveTrip(trip);
+    toast.success("Successfully replaced trip!", { position: "top-center" });
   }, [setActiveTrip, trip]);
 
   useEffect(() => {
@@ -174,13 +198,7 @@ const TripCard = memo(function TripCard({ trip }: Props) {
                       </div>
                     );
                   })}
-                  <Button
-                    variant={activeTrip ? "destructive" : "default"}
-                    onClick={handleStartTrip}
-                    className="w-full mt-4"
-                  >
-                    {activeTrip ? "Start New Trip" : "Start Trip"}
-                  </Button>
+                  <StartTripButton onHandleStart={handleStartTrip} />
                 </>
               )}
             </motion.div>
@@ -188,6 +206,58 @@ const TripCard = memo(function TripCard({ trip }: Props) {
         </CardContent>
       </Card>
     </article>
+  );
+});
+
+export const StartTripButton = memo(function StartTripButton({
+  onHandleStart,
+}: {
+  onHandleStart: () => void;
+}) {
+  const handleTrigger: MouseEventHandler<HTMLButtonElement> = useCallback(
+    (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.stopPropagation();
+    },
+    [],
+  );
+
+  const activeTrip = useTransitStore((s) => s.activeTrip);
+
+  return (
+    <>
+      {activeTrip ? (
+        <Dialog>
+          <form>
+            <DialogTrigger asChild>
+              <Button onClick={handleTrigger} className="w-full">
+                Start Trip
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Replace active trip?</DialogTitle>
+                <DialogDescription className="text-pretty">
+                  You already have a trip in progress. Starting this one will
+                  replace it.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button onClick={onHandleStart} type="submit">
+                  Replace Trip
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </form>
+        </Dialog>
+      ) : (
+        <Button className="w-full" onClick={onHandleStart}>
+          Start Trip
+        </Button>
+      )}
+    </>
   );
 });
 

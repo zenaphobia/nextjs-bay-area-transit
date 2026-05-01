@@ -108,7 +108,7 @@ export default function Page() {
 
   return (
     <>
-      <main className="text-white overflow-hidden flex flex-col items-center justify-center w-screen h-dvh font-mono">
+      <main className="text-white overflow-hidden relative flex flex-col items-center justify-center w-screen h-dvh font-mono">
         <ActiveTripPlanel />
         <section className="overflow-hidden flex-1 min-h-0 w-full">
           {Panel}

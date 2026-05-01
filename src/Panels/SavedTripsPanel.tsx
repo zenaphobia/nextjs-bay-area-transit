@@ -4,7 +4,6 @@ import { useLocalStorage } from "@/lib/hooks";
 import { SavedRoute } from "@/types/localStorage";
 import { Trash } from "lucide-react";
 import { memo, useCallback } from "react";
-import { Stop } from "./TripPlannerPanel";
 import { useTransitStore } from "@/stores/global";
 
 const LOCALSTORAGE_KEY = "savedTrips_v1";
@@ -39,8 +38,11 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
   };
 
   return (
-    <section className="font-mono p-4" aria-labelledby="saved-trips-title">
-      <header className="p-4">
+    <section
+      className="font-mono p-4 h-full flex flex-col"
+      aria-labelledby="saved-trips-title"
+    >
+      <header className="p-4 w-full">
         <h2 id="saved-trips-title" className="text-lg font-semibold">
           Saved Trips
         </h2>
@@ -48,13 +50,13 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
           Routes you&apos;ve saved for quick access.
         </p>
       </header>
-      <div className="p-4">
+      <div className="p-4 flex flex-1 overflow-hidden">
         {localStorage.value.length === 0 ? (
           <p className="text-sm opacity-50 text-center py-8">
             No saved trips yet.
           </p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-2 w-full h-full overflow-y-auto">
             {localStorage.value.map((route) => (
               <li
                 key={route.origin.Name + route.destination.Name}
