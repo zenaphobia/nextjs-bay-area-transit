@@ -259,16 +259,16 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
       className="p-4 pb-0 h-full flex flex-col"
       aria-labelledby="trip-planner-title"
     >
-      <header className="p-4">
-        <h2 id="trip-planner-title" className="text-lg font-semibold">
+      {/* <header className="p-4">
+        <h2 id="trip-planner-title" className="font-semibold text-lg">
           Trip Planner
         </h2>
         <p className="text-sm opacity-75">
           Find the best route between any two Bay Area stations.
         </p>
-      </header>
+      </header> */}
       <div className="p-4 overflow-hidden flex-1 flex flex-col font-mono gap-4">
-        <section className="space-y-8 mb-8">
+        <section className="space-y-4 mb-8">
           <div className="space-y-4">
             <StationPicker
               label="Choose Origin Station"
@@ -330,7 +330,7 @@ const TripSection = memo(function TripSection({ trips }: { trips: Edge[] }) {
 
 const TripList = memo(function TripList({ trips }: { trips: Edge[] }) {
   return (
-    <ul className="space-y-8 overflow-y-auto">
+    <ul className="space-y-4 overflow-y-auto">
       {trips.map((t, i) => {
         return (
           <motion.li
@@ -340,9 +340,9 @@ const TripList = memo(function TripList({ trips }: { trips: Edge[] }) {
             transition={{ delay: i * 0.1 }}
             style={{ scrollbarGutter: "stable" }}
           >
-            <p className="text-sm opacity-50 mb-1">
-              Trip {i + 1}/{trips.length}
-            </p>
+            {/* <p className="text-sm opacity-50 mb-1">
+              Trip {i + 1} of {trips.length}
+            </p> */}
             <TripCard trip={t.node} />
           </motion.li>
         );

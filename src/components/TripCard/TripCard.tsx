@@ -28,9 +28,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 type Props = {
@@ -41,7 +38,6 @@ const TRIP_COUNTDOWN_FRAGMENT: Fragment[] = ["minutes", "seconds"];
 
 const TripCard = memo(function TripCard({ trip }: Props) {
   const setActiveTrip = useTransitStore((s) => s.setActiveTrip);
-  const activeTrip = useTransitStore((s) => s.activeTrip);
   const articleRef = useRef<HTMLElement>(null);
   const [expanded, setExpanded] = useState(false);
   const departureTimeString = useMemo(
@@ -100,11 +96,11 @@ const TripCard = memo(function TripCard({ trip }: Props) {
         "p-1 cursor-pointer",
         departed && "opacity-50 pointer-events-none",
       )}
-      onClick={handleExpandCallback}
     >
       <Card>
         <CardContent>
           <div
+            onClick={handleExpandCallback}
             className="flex items-center gap-2 w-full"
             key={`${trip.legs[0].mode}-${trip.legs[0].from.name}-${trip.legs[0].to.name}-${trip.legs[0].from.departure?.scheduledTime ?? trip.legs[0].to.arrival?.scheduledTime}-compact`}
           >
