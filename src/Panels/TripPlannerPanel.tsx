@@ -97,7 +97,7 @@ const SaveTripButton = memo(function SaveTripButton({
           ),
         );
 
-        toast.success("Trip deleted!", { position: "top-center" });
+        toast.success("Trip deleted", { position: "bottom-center" });
       } else {
         localStorage.setValue((prev) => [
           ...prev,
@@ -109,7 +109,7 @@ const SaveTripButton = memo(function SaveTripButton({
           },
         ]);
 
-        toast.success("Trip saved!", { position: "top-center" });
+        toast.success("Trip saved", { position: "bottom-center" });
       }
     },
     [originStation, destinationStation, isSaved, localStorage],
@@ -339,6 +339,7 @@ const TripList = memo(function TripList({ trips }: { trips: Edge[] }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             style={{ scrollbarGutter: "stable" }}
+            className="p-1"
           >
             {/* <p className="text-sm opacity-50 mb-1">
               Trip {i + 1} of {trips.length}

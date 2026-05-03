@@ -69,7 +69,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
           onClick={() => {
             setCollapsed((prev) => !prev);
           }}
-          className="font-mono bg-secondary w-full overflow-hidden z-[10]"
+          className="font-mono bg-secondary w-full overflow-hidden z-[10] cursor-pointer"
           aria-labelledby="active-trip-title"
         >
           <header className="p-4 w-full flex justify-between items-center">

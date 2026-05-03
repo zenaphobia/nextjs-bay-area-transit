@@ -5,6 +5,17 @@ import { SavedRoute } from "@/types/localStorage";
 import { Trash } from "lucide-react";
 import { memo, useCallback } from "react";
 import { useTransitStore } from "@/stores/global";
+import { ArrowUpRightIcon } from "lucide-react";
+import { BookmarkOff } from "lucide-react";
+
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 
 const LOCALSTORAGE_KEY = "savedTrips_v1";
 
@@ -52,9 +63,7 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
       </header>
       <div className="p-4 flex flex-1 overflow-hidden">
         {localStorage.value.length === 0 ? (
-          <p className="text-sm opacity-50 text-center py-8">
-            No saved trips yet.
-          </p>
+          <NoSavedTrips />
         ) : (
           <ul className="space-y-2 w-full h-full overflow-y-auto">
             {localStorage.value.map((route) => (
@@ -85,5 +94,33 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
     </section>
   );
 });
+
+function NoSavedTrips() {
+  const setCurrentView = useTransitStore((s) => s.setCurrentView);
+
+  return (
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <BookmarkOff />
+        </EmptyMedia>
+        <EmptyTitle>No Saved Trips Yet</EmptyTitle>
+        <EmptyDescription>
+          You haven&apos;t saved any trips yet. Get started by saving one in the
+          trip planner.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent className="flex-row justify-center gap-2">
+        <Button
+          onClick={() => {
+            setCurrentView("trips");
+          }}
+        >
+          Find Routes
+        </Button>
+      </EmptyContent>
+    </Empty>
+  );
+}
 
 export default SavedTripsPanel;
