@@ -69,15 +69,15 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
             {localStorage.value.map((route) => (
               <li
                 key={route.origin.Name + route.destination.Name}
-                className="flex gap-2"
+                className="flex gap-2 bg-secondary/50 p-2 rounded-lg"
               >
                 <Button
                   onClick={() => {
                     handleStationSet(route);
                   }}
-                  className="flex-1 flex items-center px-3 rounded-md border border-foreground/10"
+                  className="flex-1 flex items-center overflow-hidden px-3 rounded-md border border-foreground/10"
                 >
-                  <span className="text-sm">{route.name}</span>
+                  <span className="text-sm truncate w-full">{route.name}</span>
                 </Button>
                 <Button
                   onClick={() => handleDelete(route)}
