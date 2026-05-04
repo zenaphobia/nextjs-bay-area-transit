@@ -99,10 +99,6 @@ export default function Page() {
     return transitFeed.startPoll();
   }, [transitFeed]);
 
-  useEffect(() => {
-    console.log({ entities: transitFeed.trams?.entity });
-  }, [transitFeed.trams]);
-
   const currentView = useTransitStore((s) => s.currentView);
   const Panel = {
     trips: <TripPlannerPanel stopList={stopList} />,

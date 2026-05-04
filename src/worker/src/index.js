@@ -119,7 +119,7 @@ export default {
 			const data = await res.arrayBuffer();
 			await env.TRANSIT_KV.put(TRANSIT_TRAM_KEY, data);
 		} else {
-			console.error('Error fetching from 511 API');
+			console.error('Error fetching from 511 API: ', res.statusText);
 		}
 	},
 };

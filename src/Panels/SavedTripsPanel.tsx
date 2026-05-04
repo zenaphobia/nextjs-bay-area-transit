@@ -55,7 +55,7 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
     >
       <header className="p-4 w-full">
         <h2 id="saved-trips-title" className="text-lg font-semibold">
-          Saved Trips
+          Saved Routes
         </h2>
         <p className="text-sm opacity-75">
           Routes you&apos;ve saved for quick access.
@@ -117,7 +117,7 @@ function NoSavedTrips() {
             setCurrentView("trips");
           }}
         >
-          Find Routes
+          Find Trips
         </Button>
       </EmptyContent>
     </Empty>

@@ -72,9 +72,9 @@ function StopPanel({ stops }: { stops: Stops }) {
                 <EmptyMedia variant="icon">
                   <TramFront />
                 </EmptyMedia>
-                <EmptyTitle>No trains scheduled</EmptyTitle>
+                <EmptyTitle>No live departures</EmptyTitle>
                 <EmptyDescription>
-                  Choose another station to see departing trams.
+                  See Trip Planner for scheduled service.
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>

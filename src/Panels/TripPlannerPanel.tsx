@@ -21,6 +21,13 @@ import { SavedRoute } from "@/types/localStorage";
 import { Input } from "@/components/ui/input";
 import { useTransitStore } from "@/stores/global";
 import { toast } from "sonner";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
 
 export type Stop = {
   Name: string;
@@ -53,7 +60,7 @@ const GetTripsButton = memo(function GetTripsButton({
       className="w-7/8 text-md"
     >
       {isLoading && <Spinner />}
-      Find Routes
+      Find Trips
     </Button>
   );
 });
@@ -319,10 +326,17 @@ const TripSection = memo(function TripSection({ trips }: { trips: Edge[] }) {
           </div>
         </motion.section>
       ) : (
-        <div className="flex flex-col gap-4 items-center justify-center w-full h-full opacity-50">
-          <TramFront size={"52"}></TramFront>
-          <p>Pick your start and end stations to get going.</p>
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <TramFront />
+            </EmptyMedia>
+            <EmptyTitle>No trips</EmptyTitle>
+            <EmptyDescription>
+              Pick your start and end stations to get going.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
     </>
   );

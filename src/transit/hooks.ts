@@ -36,27 +36,27 @@ export function useTransitFeed() {
   const [stops, setStops] = useState<TransitContent>();
   const [loaded, setLoaded] = useState(false);
 
-  const filterDeparted = useCallback(
-    (trams: Omit<transit_realtime.FeedMessage, "toJSON">) => {
-      const now = Date.now();
-      return {
-        ...trams,
-        entity: trams.entity.map((entity) => {
-          if (!entity.tripUpdate?.stopTimeUpdate) return entity;
-          return {
-            ...entity,
-            tripUpdate: {
-              ...entity.tripUpdate,
-              stopTimeUpdate: entity.tripUpdate.stopTimeUpdate.filter(
-                (stu) => (stu.departure?.time as number) * 1000 - now > 0,
-              ),
-            },
-          };
-        }),
-      };
-    },
-    [],
-  );
+  // const filterDeparted = useCallback(
+  //   (trams: Omit<transit_realtime.FeedMessage, "toJSON">) => {
+  //     const now = Date.now();
+  //     return {
+  //       ...trams,
+  //       entity: trams.entity.map((entity) => {
+  //         if (!entity.tripUpdate?.stopTimeUpdate) return entity;
+  //         return {
+  //           ...entity,
+  //           tripUpdate: {
+  //             ...entity.tripUpdate,
+  //             stopTimeUpdate: entity.tripUpdate.stopTimeUpdate.filter(
+  //               (stu) => (stu.departure?.time as number) * 1000 - now > 0,
+  //             ),
+  //           },
+  //         };
+  //       }),
+  //     };
+  //   },
+  //   [],
+  // );
 
   const getFeed = useCallback(async () => {
     try {
@@ -70,7 +70,7 @@ export function useTransitFeed() {
         "toJSON"
       >;
 
-      setTrams(filterDeparted(trams));
+      setTrams(trams);
 
       if (!stopRes.ok) throw new Error("Could not fetch feed");
       const stopData = await stopRes.json();
@@ -80,7 +80,7 @@ export function useTransitFeed() {
     } catch (e) {
       console.error("Failed to load data from API: ", e);
     }
-  }, [filterDeparted]);
+  }, []);
 
   const inflight = useRef(false);
 
@@ -98,7 +98,7 @@ export function useTransitFeed() {
           transit_realtime.FeedMessage,
           "toJSON"
         >;
-        setTrams(filterDeparted(trams));
+        setTrams(trams);
       } catch (err) {
         console.error("[startPoll] Failed to fetch data: ", err);
       } finally {
@@ -107,7 +107,7 @@ export function useTransitFeed() {
     }, 1000 * 60);
 
     return () => clearInterval(intervalID);
-  }, [filterDeparted]);
+  }, []);
 
   return useMemo(
     () => ({
