@@ -6,7 +6,7 @@ A real-time BART transit tracker built with React, TypeScript, and Next.js. This
 
 ## Stack
 
-- **Frontend:** React · TypeScript · Next.js · Framer Motion · Tailwind CSS
+- **Frontend:** React · TypeScript · Next.js · Framer Motion · Tailwind CSS · Zustand
 - **Map:** react-zoom-pan-pinch
 - **Backend:** Cloudflare Worker proxying GTFS Realtime protobuf data
 - **Routing:** OpenTripPlanner (GraphQL) with BART GTFS Static + OSM data
@@ -29,7 +29,7 @@ OTP powers the trip planning side of the app. Remaining work:
 - [x] Integrate on-device persistent storage for saved trips
 - [x] Deploy OTP server (Fly.io)
 - [ ] Poll general alerts from 511 API and cache with KV
-- [ ] Build bottom nav bar (Map, Trips, Saved Trips, Alerts)
+- [x] Build bottom nav bar (Map, Trips, Saved Trips, Alerts)
 
 ### Map Polish
 
@@ -40,4 +40,4 @@ The BART map is interactive but needs refinement:
 
 ### Final UX Pass
 
-Once individual views are solid, take a holistic pass at the user flow, transitions between stops, trip planning, and the 3D hero scene. Make sure everything feels cohesive.
+Once individual views are solid, take a holistic pass at the user flow, transitions between stops, trip planning. Make sure everything feels cohesive.

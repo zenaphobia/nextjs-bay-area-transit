@@ -1,6 +1,6 @@
 {
-	"name": "my-first-worker",
-	"version": "0.0.0",
+	"name": "bay-area-transit-worker",
+	"version": "1.0.0",
 	"private": true,
 	"scripts": {
 		"deploy": "wrangler deploy",

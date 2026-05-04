@@ -8,8 +8,8 @@ import { motion } from "motion/react";
 import { useTransitStore } from "@/stores/global";
 
 const viewIcons: Record<View, ComponentType<SVGProps<SVGSVGElement>>> = {
-  map: Map,
   trips: Route,
+  map: Map,
   savedTrips: Bookmark,
   alerts: Bell,
 };

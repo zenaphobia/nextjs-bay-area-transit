@@ -1,18 +1,35 @@
 "use client";
 import { useTransitFeed } from "../transit/hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import type { transit_realtime } from "gtfs-realtime-bindings";
-import { StationTrams, Stop } from "@/types/types";
+import { Stop } from "@/types/types";
 import BartMap from "@/components/BartMap/BartMap";
-import StopPanel from "@/components/StopPanel";
 import TripPlannerPanel from "@/Panels/TripPlannerPanel";
 import ActiveTripPlanel from "@/Panels/ActiveTripPanel";
 import Navbar from "@/components/Navbar/Navbar";
-import { View } from "@/components/Navbar/types";
 import { useTransitStore } from "@/stores/global";
 import SavedTripsPanel from "@/Panels/SavedTripsPanel";
 import AlertsPanel from "@/Panels/AlertsPanel";
 import { Toaster } from "@/components/ui/sonner";
+
+export type Stops = {
+  Name: string;
+  id: string;
+  trams: {
+    Trip: transit_realtime.ITripDescriptor;
+    StopTimeUpdate: transit_realtime.TripUpdate.IStopTimeUpdate;
+    nextStop: transit_realtime.TripUpdate.IStopTimeUpdate | undefined;
+  }[];
+}[];
+
+export type stopList = {
+  Name: string;
+  id: string;
+  Location: {
+    Longitude: string;
+    Latitude: string;
+  };
+}[];
 
 export default function Page() {
   const transitFeed = useTransitFeed();
@@ -56,7 +73,7 @@ export default function Page() {
     );
   }, [transitFeed.stops]);
 
-  const stops = useMemo(() => {
+  const stops: Stops = useMemo(() => {
     if (!transitFeed.stops) return [];
 
     return transitFeed.stops?.Contents.dataObjects.ScheduledStopPoint.map(
@@ -71,19 +88,6 @@ export default function Page() {
     );
   }, [stopTramMap, transitFeed.stops]);
 
-  const [activeStopName, setActiveStopName] = useState<string>();
-
-  const activeStop = useMemo<StationTrams | undefined>(() => {
-    if (!activeStopName) return undefined;
-    const matchingStops = stops.filter((s) => s.Name === activeStopName);
-    const trams = matchingStops.flatMap((s) => s.trams);
-    return { Name: activeStopName, trams };
-  }, [activeStopName, stops]);
-
-  const handleSelect = useCallback((stop: string | undefined) => {
-    setActiveStopName(stop);
-  }, []);
-
   const loaded = useMemo(() => {
     if (!transitFeed.loaded) {
       transitFeed.getFeed();
@@ -97,11 +101,10 @@ export default function Page() {
   }, [transitFeed]);
 
   const currentView = useTransitStore((s) => s.currentView);
-  const activeTrip = useTransitStore((s) => s.activeTrip);
 
   const Panel = {
-    map: <BartMap />,
     trips: <TripPlannerPanel stopList={stopList} />,
+    map: <BartMap stopList={stopList} stops={stops} />,
     savedTrips: <SavedTripsPanel />,
     alerts: <AlertsPanel />,
   }[currentView];

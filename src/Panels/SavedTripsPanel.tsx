@@ -75,7 +75,8 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
                   onClick={() => {
                     handleStationSet(route);
                   }}
-                  className="flex-1 flex items-center overflow-hidden px-3 rounded-md border border-foreground/10"
+                  variant={"ghost"}
+                  className="flex-1 flex items-center overflow-hidden px-3 rounded-md"
                 >
                   <span className="text-sm truncate w-full">{route.name}</span>
                 </Button>

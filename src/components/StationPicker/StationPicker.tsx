@@ -28,6 +28,7 @@ type Props = {
   onChange: (station: Stop | undefined) => void;
   label: string;
   value?: Stop;
+  className?: string;
 };
 
 const DataList = memo(function DataList({
@@ -36,6 +37,7 @@ const DataList = memo(function DataList({
   id,
   label,
   value,
+  className,
 }: Props) {
   const uniqueStops = useMemo(() => {
     return items.filter(
@@ -57,7 +59,6 @@ const DataList = memo(function DataList({
 
   const handleSelect = useCallback(
     (station: Stop | undefined) => {
-      console.log("handleSelect called: ", station);
       onChange(station);
       setStation(station?.Name ?? "");
       setInput(station?.Name ?? "");
@@ -87,6 +88,8 @@ const DataList = memo(function DataList({
     setInput(e.currentTarget.value);
   }, []);
 
+  const classes = twMerge("w-full relative", className);
+
   useEffect(() => {
     if (value) {
       console.log("Value changed");
@@ -96,7 +99,7 @@ const DataList = memo(function DataList({
   }, [value, handleSelect]);
 
   return (
-    <div className="w-full relative">
+    <div className={classes}>
       <Field>
         <ButtonGroup>
           <Input

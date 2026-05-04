@@ -1,10 +1,19 @@
 "use client";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import BartMapSVG from "./bart_condensed.svg";
 import { useTransitStore } from "@/stores/global";
+import StopPanel from "../StopPanel";
+import { Stops, stopList } from "@/app/page";
+import StationPicker, { Stop } from "../StationPicker/StationPicker";
 
-export default function BartMap() {
+export default function BartMap({
+  stops,
+  stopList,
+}: {
+  stops: Stops;
+  stopList: stopList;
+}) {
   const svgRef = useRef<SVGSVGElement>(null);
   const stations = useRef<SVGElement>(null);
   const details = useRef<SVGElement>(null);
@@ -49,8 +58,24 @@ export default function BartMap() {
     }
   }, [scale]);
 
+  const setActiveStation = useTransitStore((s) => s.setActiveStop);
+
+  const handleStationChange = useCallback(
+    (stop: Stop | undefined) => {
+      setActiveStation(stop?.Name ?? null);
+    },
+    [setActiveStation],
+  );
+
   return (
-    <div className="w-screen h-screen absolute left-0 top-0">
+    <div className="w-screen h-screen left-0 top-0 relative">
+      <StationPicker
+        className="absolute top-8 left-1/2 -translate-x-1/2 z-[10] px-4"
+        id="stop picker"
+        items={stopList}
+        label="Choose Station"
+        onChange={handleStationChange}
+      />
       <TransformWrapper
         onTransform={(_, { scale }) => {
           setScale(Math.round(scale));
@@ -67,6 +92,7 @@ export default function BartMap() {
           />
         </TransformComponent>
       </TransformWrapper>
+      <StopPanel stops={stops} />
     </div>
   );
 }
