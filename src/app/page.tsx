@@ -18,7 +18,6 @@ export type Stops = {
   trams: {
     Trip: transit_realtime.ITripDescriptor;
     StopTimeUpdate: transit_realtime.TripUpdate.IStopTimeUpdate;
-    nextStop: transit_realtime.TripUpdate.IStopTimeUpdate | undefined;
   }[];
 }[];
 
@@ -39,21 +38,21 @@ export default function Page() {
       {
         Trip: transit_realtime.ITripDescriptor;
         StopTimeUpdate: transit_realtime.TripUpdate.IStopTimeUpdate;
-        nextStop: transit_realtime.TripUpdate.IStopTimeUpdate | undefined;
       }[]
     > = new Map();
 
     transitFeed.trams?.entity.forEach((feedEntity) => {
       feedEntity.tripUpdate?.stopTimeUpdate?.forEach((stu, index) => {
-        if (!stu.stopId) return;
-        if (!map.has(stu.stopId)) map.set(stu.stopId, []);
+        if (!stu.stopId) {
+          console.log("No stopID provided, skipping");
+          return;
+        }
 
-        const nextStop = feedEntity.tripUpdate?.stopTimeUpdate?.[index + 1];
+        if (!map.has(stu.stopId)) map.set(stu.stopId, []);
 
         map.get(stu.stopId)!.push({
           Trip: feedEntity.tripUpdate?.trip as transit_realtime.ITripDescriptor,
           StopTimeUpdate: stu,
-          nextStop,
         });
       });
     });
@@ -100,8 +99,11 @@ export default function Page() {
     return transitFeed.startPoll();
   }, [transitFeed]);
 
-  const currentView = useTransitStore((s) => s.currentView);
+  useEffect(() => {
+    console.log({ entities: transitFeed.trams?.entity });
+  }, [transitFeed.trams]);
 
+  const currentView = useTransitStore((s) => s.currentView);
   const Panel = {
     trips: <TripPlannerPanel stopList={stopList} />,
     map: <BartMap stopList={stopList} stops={stops} />,

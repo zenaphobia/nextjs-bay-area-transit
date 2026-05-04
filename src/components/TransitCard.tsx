@@ -7,6 +7,7 @@ import { twJoin, twMerge } from "tailwind-merge";
 import { getColorByLine } from "../transit/utils";
 import { ROUTE_TERMINUS } from "../transit/constants";
 import Countdown from "./Countdown/Countdown";
+import { Card } from "./ui/card";
 
 const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
   const departureTimeString = new Date(
@@ -53,33 +54,93 @@ const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
   return (
     <motion.li
       layout
-      className={twJoin(
-        "border border-white/15 overflow-hidden gap-1 rounded-lg flex justify-between",
-        hasDeparted && "opacity-50",
-      )}
+      className={twJoin("list-none p-1", hasDeparted && "opacity-50")}
     >
-      <AnimatePresence mode="wait">
-        <button onClick={toggleView} className="w-full h-full flex">
-          {display === "full" ? (
-            <motion.div
-              layout
-              key="full"
-              transition={{ duration: 0.5 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex justify-between gap-1 w-full"
-            >
-              <div
-                className={twMerge(
-                  "min-w-5 h-auto",
-                  getColorByLine(tram.Trip.routeId as string),
-                )}
-              ></div>
-              <div className="flex justify-between w-full p-4">
-                <div className="flex flex-col gap-1 text-left">
-                  <h3 className="font-bold text-lg opacity-80">
-                    {terminus.full}
+      <Card size="sm" className="flex-row gap-0 py-0!">
+        <AnimatePresence mode="wait">
+          <button onClick={toggleView} className="w-full h-full flex">
+            {display === "full" ? (
+              <motion.div
+                layout
+                key="full"
+                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex justify-between gap-1 w-full"
+              >
+                <div
+                  className={twMerge(
+                    "min-w-5 h-auto",
+                    getColorByLine(tram.Trip.routeId as string),
+                  )}
+                ></div>
+                <div className="flex justify-between w-full p-4">
+                  <div className="flex flex-col gap-1 text-left">
+                    <h3 className="font-bold text-lg opacity-80">
+                      {terminus.full}
+                    </h3>
+                    <p
+                      className={twMerge(
+                        "text-xs",
+                        getColorByLine(tram.Trip.routeId as string, "text"),
+                      )}
+                    >
+                      {tram.Trip.routeId?.split("-")[0]} → {terminus.full}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-1 text-right">
+                    {delay ? (
+                      <div className="flex px-4 py-0.5 text-center justify-center text-xs rounded-full bg-red-900">
+                        <h2 className="font-bold text-center">
+                          +{Math.floor(delay / 60)} MIN
+                        </h2>
+                      </div>
+                    ) : null}
+                    {!hasDeparted ? (
+                      <motion.div exit={{ opacity: 0 }}>
+                        <Countdown
+                          onDone={() => {
+                            setHasDeparted(true);
+                          }}
+                          target={departureDate}
+                          fragment={["minutes", "seconds"]}
+                        />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      >
+                        <h6>Departed</h6>
+                      </motion.div>
+                    )}
+                    <h4 className="text-sm opacity-50">
+                      {departureTimeString}
+                    </h4>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                layout
+                key="compact"
+                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex w-full justify-between items-center gap-4"
+              >
+                <div
+                  className={twMerge(
+                    "min-w-5 h-full",
+                    getColorByLine(tram.Trip.routeId as string),
+                  )}
+                ></div>
+                <div className="w-full gap-2 flex justify-between items-center">
+                  <h3 className="font-bold text-sm opacity-75 w-max-[25%] truncate">
+                    {terminus.compact}
                   </h3>
                   <p
                     className={twMerge(
@@ -87,83 +148,24 @@ const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
                       getColorByLine(tram.Trip.routeId as string, "text"),
                     )}
                   >
-                    {tram.Trip.routeId?.split("-")[0]} → {terminus.full}
+                    {tram.Trip.routeId?.split("-")[0]} → {terminus.compact}
                   </p>
-                </div>
-
-                <div className="flex flex-col gap-1 text-right">
                   {delay ? (
-                    <div className="flex px-4 py-0.5 text-center justify-center text-xs rounded-full bg-red-900">
+                    <div className="flex px-1 text-center justify-center text-[10px] min-w-[50px] rounded-full bg-red-900">
                       <h2 className="font-bold text-center">
                         +{Math.floor(delay / 60)} MIN
                       </h2>
                     </div>
                   ) : null}
-                  {!hasDeparted ? (
-                    <motion.div exit={{ opacity: 0 }}>
-                      <Countdown
-                        onDone={() => {
-                          setHasDeparted(true);
-                        }}
-                        target={departureDate}
-                        fragment={["minutes", "seconds"]}
-                      />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    >
-                      <h6>Departed</h6>
-                    </motion.div>
-                  )}
-                  <h4 className="text-sm opacity-50">{departureTimeString}</h4>
+                  <h1 className="text-lg font-bold mr-4 min-w-1/4">
+                    {departureTimeString}
+                  </h1>
                 </div>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              layout
-              key="compact"
-              transition={{ duration: 0.5 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex w-full justify-between items-center gap-4"
-            >
-              <div
-                className={twMerge(
-                  "min-w-5 h-full",
-                  getColorByLine(tram.Trip.routeId as string),
-                )}
-              ></div>
-              <div className="w-full gap-2 flex justify-between items-center">
-                <h3 className="font-bold text-sm opacity-75 w-max-[25%] truncate">
-                  {terminus.compact}
-                </h3>
-                <p
-                  className={twMerge(
-                    "text-xs",
-                    getColorByLine(tram.Trip.routeId as string, "text"),
-                  )}
-                >
-                  {tram.Trip.routeId?.split("-")[0]} → {terminus.compact}
-                </p>
-                {delay ? (
-                  <div className="flex px-1 text-center justify-center text-[10px] min-w-[50px] rounded-full bg-red-900">
-                    <h2 className="font-bold text-center">
-                      +{Math.floor(delay / 60)} MIN
-                    </h2>
-                  </div>
-                ) : null}
-                <h1 className="text-lg font-bold mr-4 min-w-1/4">
-                  {departureTimeString}
-                </h1>
-              </div>
-            </motion.div>
-          )}
-        </button>
-      </AnimatePresence>
+              </motion.div>
+            )}
+          </button>
+        </AnimatePresence>
+      </Card>
     </motion.li>
   );
 });

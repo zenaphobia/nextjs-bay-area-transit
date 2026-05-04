@@ -3,7 +3,6 @@ import { transit_realtime } from "gtfs-realtime-bindings";
 export type Tram = {
   Trip: transit_realtime.ITripDescriptor;
   StopTimeUpdate: transit_realtime.TripUpdate.IStopTimeUpdate;
-  nextStop: transit_realtime.TripUpdate.IStopTimeUpdate | undefined;
 };
 
 export type Stop = {
