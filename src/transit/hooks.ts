@@ -86,7 +86,11 @@ export function useTransitFeed() {
   //   [],
   // );
 
+  const inflight = useRef(false);
+
   const getFeed = useCallback(async () => {
+    if (inflight.current) return;
+    inflight.current = true;
     try {
       const [tramRes, stopRes, alertsRes] = await Promise.all([
         fetchFeed(`${endpoint}?type=trams`),
@@ -114,10 +118,10 @@ export function useTransitFeed() {
       setLoaded(true);
     } catch (e) {
       console.error("Failed to load data from API: ", e);
+    } finally {
+      inflight.current = false;
     }
   }, []);
-
-  const inflight = useRef(false);
 
   const startPoll = useCallback(() => {
     console.debug("Poll started");

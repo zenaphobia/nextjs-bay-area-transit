@@ -28,7 +28,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
 
 type Props = {
   trip: Node;
@@ -73,10 +72,6 @@ const TripCard = memo(function TripCard({ trip }: Props) {
 
   const handleStartTrip = useCallback(() => {
     setActiveTrip(trip);
-    toast.success(
-      activeTrip ? "Successfully replaced trip!" : "Trip started!",
-      { position: "bottom-center" },
-    );
   }, [activeTrip, setActiveTrip, trip]);
 
   useEffect(() => {

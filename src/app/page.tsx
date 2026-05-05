@@ -95,17 +95,15 @@ export default function Page() {
     );
   }, [stopTramMap, transitFeed.stops]);
 
-  const loaded = useMemo(() => {
-    if (!transitFeed.loaded) {
-      transitFeed.getFeed();
-    }
-
-    return transitFeed.loaded;
-  }, [transitFeed]);
+  const { loaded, getFeed, startPoll } = transitFeed;
 
   useEffect(() => {
-    return transitFeed.startPoll();
-  }, [transitFeed]);
+    if (!loaded) getFeed();
+  }, [loaded, getFeed]);
+
+  useEffect(() => {
+    return startPoll();
+  }, [startPoll]);
 
   const currentView = useTransitStore((s) => s.currentView);
   const Panel = {
