@@ -2,7 +2,7 @@
 import { useTransitFeed } from "../transit/hooks";
 import { useEffect, useMemo } from "react";
 import type { transit_realtime } from "gtfs-realtime-bindings";
-import { Stop } from "@/types/types";
+import { Stop, Tram } from "@/types/types";
 import BartMap from "@/components/BartMap/BartMap";
 import TripPlannerPanel from "@/Panels/TripPlannerPanel";
 import ActiveTripPlanel from "@/Panels/ActiveTripPanel";
@@ -33,14 +33,19 @@ export type stopList = {
 export default function Page() {
   const transitFeed = useTransitFeed();
   const serviceAlerts = transitFeed.serviceAlerts;
+  const stopIdPlatformMap = useMemo(() => {
+    const map = new Map<string, string>();
+
+    transitFeed.stops?.Contents.dataObjects.ScheduledStopPoint.forEach(
+      (station) => {
+        map.set(station.id, station.Extensions.PlatformCode);
+      },
+    );
+
+    return map;
+  }, [transitFeed.stops]);
   const stopTramMap = useMemo(() => {
-    const map: Map<
-      string,
-      {
-        Trip: transit_realtime.ITripDescriptor;
-        StopTimeUpdate: transit_realtime.TripUpdate.IStopTimeUpdate;
-      }[]
-    > = new Map();
+    const map: Map<string, Tram[]> = new Map();
 
     transitFeed.trams?.entity.forEach((feedEntity) => {
       feedEntity.tripUpdate?.stopTimeUpdate?.forEach((stu, index) => {
@@ -54,12 +59,13 @@ export default function Page() {
         map.get(stu.stopId)!.push({
           Trip: feedEntity.tripUpdate?.trip as transit_realtime.ITripDescriptor,
           StopTimeUpdate: stu,
+          platform: stopIdPlatformMap.get(stu.stopId) ?? "",
         });
       });
     });
 
     return map;
-  }, [transitFeed.trams]);
+  }, [transitFeed.trams, stopIdPlatformMap]);
 
   const stopList = useMemo(() => {
     if (!transitFeed.stops) return [];
@@ -69,6 +75,7 @@ export default function Page() {
         Name: stop.Name,
         id: stop.id,
         Location: stop.Location,
+        platform: stop.Extensions.PlatformCode,
       }),
     );
   }, [transitFeed.stops]);

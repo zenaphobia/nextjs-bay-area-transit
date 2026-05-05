@@ -24,13 +24,8 @@ function StopPanel({ stops }: { stops: Stops }) {
     if (!activeStopName) return undefined;
     const matchingStops = stops.filter((s) => s.Name === activeStopName);
     const trams = matchingStops.flatMap((s) => s.trams);
-    console.log("Matching stops: ", matchingStops);
     return { Name: activeStopName, trams };
   }, [activeStopName, stops]);
-
-  useEffect(() => {
-    console.log({ stops, activeStopName, activeStop });
-  }, [stops, activeStopName, activeStop]);
 
   return (
     <Drawer

@@ -80,14 +80,21 @@ const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
                     <h3 className="font-bold text-lg opacity-80">
                       {terminus.full}
                     </h3>
-                    <p
+                    <div
                       className={twMerge(
                         "text-xs",
                         getColorByLine(tram.Trip.routeId as string, "text"),
                       )}
                     >
-                      {tram.Trip.routeId?.split("-")[0]} → {terminus.full}
-                    </p>
+                      <span>{tram.Trip.routeId?.split("-")[0]}</span>
+                      <span
+                        className={twMerge(
+                          getColorByLine(tram.Trip.routeId as string, "bg"),
+                          "w-2 h-2 rounded-full inline-block mx-2",
+                        )}
+                      />
+                      Platform {tram.platform}
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-1 text-right">
@@ -144,11 +151,11 @@ const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
                   </h3>
                   <p
                     className={twMerge(
-                      "text-xs",
+                      "text-xs text-nowrap",
                       getColorByLine(tram.Trip.routeId as string, "text"),
                     )}
                   >
-                    {tram.Trip.routeId?.split("-")[0]} → {terminus.compact}
+                    Platform {tram.platform}
                   </p>
                   {delay ? (
                     <div className="flex px-1 text-center justify-center text-[10px] min-w-[50px] rounded-full bg-red-900">
