@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import TransitCard from "./TransitCard";
 import { StationTrams } from "@/types/types";
 import { Button } from "./ui/button";
-import { Stops } from "@/app/page";
+import { Station } from "@/app/page";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "./ui/drawer";
 import { Card, CardContent } from "./ui/card";
 import { TramFront } from "lucide-react";
@@ -16,7 +16,7 @@ import {
   EmptyTitle,
 } from "./ui/empty";
 
-function StopPanel({ stops }: { stops: Stops }) {
+function StopPanel({ stops }: { stops: Station }) {
   const [showingAll, setShowingAll] = useState(false);
   const activeStopName = useTransitStore((s) => s.activeStop);
   const setActiveStop = useTransitStore((s) => s.setActiveStop);

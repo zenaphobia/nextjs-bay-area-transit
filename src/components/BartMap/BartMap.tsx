@@ -4,14 +4,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import BartMapSVG from "./bart_condensed.svg";
 import { useTransitStore } from "@/stores/global";
 import StopPanel from "../StopPanel";
-import { Stops, stopList } from "@/app/page";
+import { Station, stopList } from "@/app/page";
 import StationPicker, { Stop } from "../StationPicker/StationPicker";
 
 export default function BartMap({
   stops,
   stopList,
 }: {
-  stops: Stops;
+  stops: Station;
   stopList: stopList;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);

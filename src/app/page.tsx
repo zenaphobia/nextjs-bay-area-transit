@@ -12,12 +12,13 @@ import SavedTripsPanel from "@/Panels/SavedTripsPanel";
 import AlertsPanel from "@/Panels/AlertsPanel";
 import { Toaster } from "@/components/ui/sonner";
 
-export type Stops = {
+export type Station = {
   Name: string;
   id: string;
   trams: {
     Trip: transit_realtime.ITripDescriptor;
     StopTimeUpdate: transit_realtime.TripUpdate.IStopTimeUpdate;
+    platform: string;
   }[];
 }[];
 
@@ -80,7 +81,7 @@ export default function Page() {
     );
   }, [transitFeed.stops]);
 
-  const stops: Stops = useMemo(() => {
+  const stops: Station = useMemo(() => {
     if (!transitFeed.stops) return [];
 
     return transitFeed.stops?.Contents.dataObjects.ScheduledStopPoint.map(
