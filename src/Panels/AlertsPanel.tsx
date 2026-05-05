@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/empty";
 import { useTransitStore } from "@/stores/global";
 import { ServiceAlerts } from "@/transit/hooks";
-import { AlertTriangle, BookmarkOff } from "lucide-react";
+import { AlertTriangle, BellOff, CircleAlert } from "lucide-react";
 import { memo } from "react";
 
 const AlertsPanel = memo(function AlertsPanel({
@@ -29,9 +29,13 @@ const AlertsPanel = memo(function AlertsPanel({
         </p>
       </header>
       <div className="p-4">
-        <ul className="space-y-3">
-          {alerts ? (
-            alerts.Entities.map((alert) => {
+        {alerts === undefined ? (
+          <ErrorFetchingServiceAlerts />
+        ) : alerts.Entities.length === 0 ? (
+          <NoServiceAlerts />
+        ) : (
+          <ul className="space-y-3">
+            {alerts.Entities.map((alert) => {
               const Icon = AlertTriangle;
               return (
                 <li
@@ -66,11 +70,9 @@ const AlertsPanel = memo(function AlertsPanel({
                   </div>
                 </li>
               );
-            })
-          ) : (
-            <ErrorFetchingServiceAlerts />
-          )}
-        </ul>
+            })}
+          </ul>
+        )}
       </div>
     </section>
   );
@@ -83,7 +85,7 @@ function ErrorFetchingServiceAlerts() {
     <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <BookmarkOff />
+          <CircleAlert />
         </EmptyMedia>
         <EmptyTitle>Couldn&apos;t load alerts</EmptyTitle>
         <EmptyDescription>
@@ -99,6 +101,22 @@ function ErrorFetchingServiceAlerts() {
           Find Trips
         </Button>
       </EmptyContent>
+    </Empty>
+  );
+}
+
+function NoServiceAlerts() {
+  return (
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <BellOff />
+        </EmptyMedia>
+        <EmptyTitle>No active alerts</EmptyTitle>
+        <EmptyDescription>
+          All transit services are running as scheduled.
+        </EmptyDescription>
+      </EmptyHeader>
     </Empty>
   );
 }
