@@ -109,17 +109,42 @@ export default {
 	},
 
 	async scheduled(event, env, ctx) {
-		const API_KEY = env.API_KEY;
-		const TRAMS_URL = new URL(`http://api.511.org/transit/tripupdates?api_key=${API_KEY}&agency=BA`);
-		const TRANSIT_TRAM_KEY = 'transit_trams';
+		switch (event.cron) {
+			case '*/2 0-7,12-23 * * *':
+				ctx.waitUntil(fetchTramData(env));
+				break;
+			case '*/10 0-7,12-23 * * *':
+				ctx.waitUntil(fetchServiceAlerts(env));
+				break;
+		}
 
-		const res = await fetch(TRAMS_URL);
+		async function fetchServiceAlerts(env) {
+			const API_KEY = env.API_KEY;
+			const SERVICE_ALERTS_URL = new URL(`http://api.511.org/transit/servicealerts?api_key=${API_KEY}&agency=BA&format=json`);
+			const TRANSIT_SERVICE_ALERT_KEY = 'transit_service_alerts';
+			const res = await fetch(SERVICE_ALERTS_URL);
 
-		if (res.ok) {
-			const data = await res.arrayBuffer();
-			await env.TRANSIT_KV.put(TRANSIT_TRAM_KEY, data);
-		} else {
-			console.error('Error fetching from 511 API: ', res.statusText);
+			if (res.ok) {
+				const json = await res.json();
+				const data = JSON.stringify(json);
+				await env.TRANSIT_KV.put(TRANSIT_SERVICE_ALERT_KEY, data);
+			} else {
+				console.error('Failed to fetch service alerts');
+			}
+		}
+
+		async function fetchTramData(env) {
+			const API_KEY = env.API_KEY;
+			const TRAMS_URL = new URL(`http://api.511.org/transit/tripupdates?api_key=${API_KEY}&agency=BA`);
+			const TRANSIT_TRAM_KEY = 'transit_trams';
+			const res = await fetch(TRAMS_URL);
+
+			if (res.ok) {
+				const data = await res.arrayBuffer();
+				await env.TRANSIT_KV.put(TRANSIT_TRAM_KEY, data);
+			} else {
+				console.error('Error fetching from 511 API: ', res.statusText);
+			}
 		}
 	},
 };
