@@ -26,7 +26,7 @@ export default {
 		const API_KEY = env.API_KEY;
 
 		if (type === 'trams') {
-			const TRAMS_URL = new URL(`http://api.511.org/transit/tripupdates?api_key=${API_KEY}&agency=BA`);
+			const TRAMS_URL = new URL(`https://api.511.org/transit/tripupdates?api_key=${API_KEY}&agency=BA`);
 			const TRANSIT_TRAM_KEY = 'transit_trams';
 			const tram_cache = await env.TRANSIT_KV.get(TRANSIT_TRAM_KEY, 'arrayBuffer');
 
@@ -89,6 +89,38 @@ export default {
 					headers: { 'Content-Type': 'application/json' },
 				});
 			}
+		} else if (type === 'alerts') {
+			const SERVICE_ALERTS_URL = new URL(`https://api.511.org/transit/servicealerts?api_key=${API_KEY}&agency=BA&format=json`);
+			const TRANSIT_SERVICE_ALERT_KEY = 'transit_service_alerts';
+			const alerts_cache = await env.TRANSIT_KV.get(TRANSIT_SERVICE_ALERT_KEY);
+
+			if (alerts_cache) {
+				console.info('Getting cache hit');
+				return new Response(alerts_cache, {
+					headers: {
+						'Content-Type': 'application/json',
+						'Cache-Control': 'public, max-age=60',
+						'Access-Control-Allow-Origin': '*',
+					},
+				});
+			}
+
+			try {
+				const buffer = await fetchAndSetData(SERVICE_ALERTS_URL, TRANSIT_SERVICE_ALERT_KEY, 'json');
+				return new Response(buffer, {
+					headers: {
+						'Content-Type': 'application/json',
+						'Cache-Control': 'public, max-age=60',
+						'Access-Control-Allow-Origin': '*',
+					},
+				});
+			} catch (err) {
+				console.error(`Failed to fetch response from '${type}' url. Error: ${err.message}`);
+				return new Response(JSON.stringify({ error: 'Failed to fetch alerts' }), {
+					status: 500,
+					headers: { 'Content-Type': 'application/json' },
+				});
+			}
 		} else {
 			return new Response('Invalid type', { status: 404 });
 		}
@@ -120,7 +152,7 @@ export default {
 
 		async function fetchServiceAlerts(env) {
 			const API_KEY = env.API_KEY;
-			const SERVICE_ALERTS_URL = new URL(`http://api.511.org/transit/servicealerts?api_key=${API_KEY}&agency=BA&format=json`);
+			const SERVICE_ALERTS_URL = new URL(`https://api.511.org/transit/servicealerts?api_key=${API_KEY}&agency=BA&format=json`);
 			const TRANSIT_SERVICE_ALERT_KEY = 'transit_service_alerts';
 			const res = await fetch(SERVICE_ALERTS_URL);
 
@@ -135,7 +167,7 @@ export default {
 
 		async function fetchTramData(env) {
 			const API_KEY = env.API_KEY;
-			const TRAMS_URL = new URL(`http://api.511.org/transit/tripupdates?api_key=${API_KEY}&agency=BA`);
+			const TRAMS_URL = new URL(`https://api.511.org/transit/tripupdates?api_key=${API_KEY}&agency=BA`);
 			const TRANSIT_TRAM_KEY = 'transit_trams';
 			const res = await fetch(TRAMS_URL);
 

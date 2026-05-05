@@ -32,6 +32,7 @@ export type stopList = {
 
 export default function Page() {
   const transitFeed = useTransitFeed();
+  const serviceAlerts = transitFeed.serviceAlerts;
   const stopTramMap = useMemo(() => {
     const map: Map<
       string,
@@ -104,7 +105,7 @@ export default function Page() {
     trips: <TripPlannerPanel stopList={stopList} />,
     map: <BartMap stopList={stopList} stops={stops} />,
     savedTrips: <SavedTripsPanel />,
-    alerts: <AlertsPanel />,
+    alerts: <AlertsPanel alerts={serviceAlerts} />,
   }[currentView];
 
   return (
