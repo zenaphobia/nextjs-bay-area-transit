@@ -11,7 +11,6 @@ import { useTransitStore } from "@/stores/global";
 import SavedTripsPanel from "@/Panels/SavedTripsPanel";
 import AlertsPanel from "@/Panels/AlertsPanel";
 import { Toaster } from "@/components/ui/sonner";
-
 export type Station = {
   Name: string;
   id: string;

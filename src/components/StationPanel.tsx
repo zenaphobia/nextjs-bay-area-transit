@@ -3,7 +3,13 @@ import TransitCard from "./TransitCard";
 import { StationTrams } from "@/types/types";
 import { Button } from "./ui/button";
 import { Station } from "@/app/page";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "./ui/drawer";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "./ui/drawer";
 import { Card, CardContent } from "./ui/card";
 import { TramFront } from "lucide-react";
 import { useTransitStore } from "@/stores/global";
@@ -37,6 +43,9 @@ function StopPanel({ stops }: { stops: Station }) {
       <DrawerContent className="font-mono">
         <DrawerHeader>
           <DrawerTitle>{activeStop?.Name}</DrawerTitle>
+          <DrawerDescription>
+            See upcoming departures for this station
+          </DrawerDescription>
         </DrawerHeader>
         <ul className="space-y-2 overflow-y-auto px-2">
           {activeStop && activeStop?.trams.length > 0 ? (

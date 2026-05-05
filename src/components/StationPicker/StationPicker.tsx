@@ -92,7 +92,6 @@ const DataList = memo(function DataList({
 
   useEffect(() => {
     if (value) {
-      console.log("Value changed");
       // eslint-disable-next-line react-hooks/set-state-in-effect
       handleSelect(value);
     }
@@ -103,6 +102,7 @@ const DataList = memo(function DataList({
       <Field>
         <ButtonGroup>
           <Input
+            name="station"
             ref={inputRef}
             placeholder={label}
             onFocus={handleOnFocus}
@@ -125,7 +125,7 @@ const DataList = memo(function DataList({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.25 }}
-          className="w-full shadow-sm absolute top-10 space-y-4 bg-background border border-white/25 rounded-md text-white p-2 z-[100]"
+          className="w-full shadow-sm relative top-2 space-y-4 bg-background border border-white/25 rounded-md text-white p-2 z-[100]"
           id={`station_list-${id}`}
         >
           <motion.ul
@@ -165,7 +165,10 @@ const StationItem = memo(function StationItem({
     (e: React.MouseEvent) => {
       e.preventDefault();
       onSelect(stop);
-      if (inputRef.current) inputRef.current.value = stop.Name;
+      if (inputRef.current) {
+        inputRef.current.value = stop.Name;
+        inputRef.current.blur();
+      }
     },
     [stop, onSelect, inputRef],
   );

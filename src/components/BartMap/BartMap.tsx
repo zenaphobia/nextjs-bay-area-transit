@@ -3,7 +3,7 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useCallback, useEffect, useRef, useState } from "react";
 import BartMapSVG from "./bart_condensed.svg";
 import { useTransitStore } from "@/stores/global";
-import StopPanel from "../StopPanel";
+import StopPanel from "../StationPanel";
 import { Station, stopList } from "@/app/page";
 import StationPicker, { Stop } from "../StationPicker/StationPicker";
 
