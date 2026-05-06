@@ -4,6 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "terminal_",
     short_name: "terminal",
+    start_url: "/",
     icons: [
       {
         src: "/web-app-manifest-192x192.png",
