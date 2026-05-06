@@ -37,7 +37,7 @@ const AlertsPanel = memo(function AlertsPanel({
         ) : alerts.Entities.length === 0 ? (
           <NoServiceAlerts />
         ) : (
-          <ul className=" h-full overflow-y-auto">
+          <ul className="space-y-2 h-full overflow-y-auto">
             {alerts.Entities.map((alert) => {
               const Icon = AlertTriangle;
               return (
