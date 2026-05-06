@@ -11,6 +11,7 @@ import { useTransitStore } from "@/stores/global";
 import SavedTripsPanel from "@/Panels/SavedTripsPanel";
 import AlertsPanel from "@/Panels/AlertsPanel";
 import { Toaster } from "@/components/ui/sonner";
+import SplashAnimation from "./animation/WordmarkSplash";
 export type Station = {
   Name: string;
   id: string;
@@ -116,6 +117,7 @@ export default function Page() {
   return (
     <>
       <main className="text-white overflow-hidden relative flex flex-col items-center justify-center w-screen h-dvh font-mono">
+        <SplashAnimation />
         <ActiveTripPlanel />
         <section className="overflow-hidden flex-1 min-h-0 w-full">
           {Panel}

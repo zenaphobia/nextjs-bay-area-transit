@@ -19,7 +19,10 @@ const AlertsPanel = memo(function AlertsPanel({
   alerts: ServiceAlerts | undefined;
 }) {
   return (
-    <section className="font-mono h-screen p-4" aria-labelledby="alerts-title">
+    <section
+      className="font-mono flex flex-col h-full p-4"
+      aria-labelledby="alerts-title"
+    >
       <header className="p-4">
         <h2 id="alerts-title" className="text-lg font-semibold">
           Alerts
@@ -28,13 +31,13 @@ const AlertsPanel = memo(function AlertsPanel({
           Service advisories and schedule changes.
         </p>
       </header>
-      <div className="p-4">
+      <div className="p-4 flex-1 overflow-hidden">
         {alerts === undefined ? (
           <ErrorFetchingServiceAlerts />
         ) : alerts.Entities.length === 0 ? (
           <NoServiceAlerts />
         ) : (
-          <ul className="space-y-3">
+          <ul className=" h-full overflow-y-auto">
             {alerts.Entities.map((alert) => {
               const Icon = AlertTriangle;
               return (

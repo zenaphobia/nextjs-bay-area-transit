@@ -15,7 +15,7 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bay Area Transit",
+  title: "terminal_",
   description:
     "View and plan destinations around the San Francisco area using the Bay Area Rapid Transit",
 };
