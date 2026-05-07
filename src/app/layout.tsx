@@ -16,8 +16,6 @@ const jetBrainsMono = JetBrains_Mono({
   variable: "--font-jetBrains-mono",
 });
 
-const GA_ID = process.env.GA_ID;
-
 export const metadata: Metadata = {
   title: "terminal_",
   description:
@@ -47,7 +45,10 @@ export default function RootLayout({
         <RegisterSW />
         {children}
       </body>
-      {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
+      {process.env.NODE_ENV === "production" &&
+        process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
     </html>
   );
 }
