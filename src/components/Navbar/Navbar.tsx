@@ -1,24 +1,26 @@
 "use client";
 
 import { Bell, Bookmark, Map, Route } from "lucide-react";
-import { memo, useState, type ComponentType, type SVGProps } from "react";
+import { memo, type ComponentType, type SVGProps } from "react";
 import { View, views } from "./types";
 import { Button } from "../ui/button";
 import { motion } from "motion/react";
 import { useTransitStore } from "@/stores/global";
+import { track } from "@/lib/analytics";
 
 const viewIcons: Record<View, ComponentType<SVGProps<SVGSVGElement>>> = {
-  trips: Route,
-  map: Map,
-  savedTrips: Bookmark,
-  alerts: Bell,
+  trip_view: Route,
+  map_view: Map,
+  savedTrips_view: Bookmark,
+  alerts_view: Bell,
 };
 
 const Navbar = memo(function Navbar() {
   const currentView = useTransitStore((s) => s.currentView);
   const setCurrentView = useTransitStore((s) => s.setCurrentView);
   const CurrentIcon = viewIcons[currentView];
-  const currentIndex = views.indexOf(currentView);
+  const currentIndex =
+    views.indexOf(currentView) === -1 ? 0 : views.indexOf(currentView);
 
   return (
     <nav

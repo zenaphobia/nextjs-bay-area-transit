@@ -108,10 +108,10 @@ export default function Page() {
 
   const currentView = useTransitStore((s) => s.currentView);
   const Panel = {
-    trips: <TripPlannerPanel stopList={stopList} />,
-    map: <BartMap stopList={stopList} stops={stops} />,
-    savedTrips: <SavedTripsPanel />,
-    alerts: <AlertsPanel alerts={serviceAlerts} />,
+    trip_view: <TripPlannerPanel stopList={stopList} />,
+    map_view: <BartMap stopList={stopList} stops={stops} />,
+    savedTrips_view: <SavedTripsPanel />,
+    alerts_view: <AlertsPanel alerts={serviceAlerts} />,
   }[currentView];
 
   return (
