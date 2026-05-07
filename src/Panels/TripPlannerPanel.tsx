@@ -256,6 +256,7 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
       track("trip_search", {
         origin: originStation.Name,
         destination: destinationStation.Name,
+        label: "quick_search",
       });
     } catch (err) {
       setError(err);

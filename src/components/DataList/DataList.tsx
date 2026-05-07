@@ -33,7 +33,7 @@ const DataList = memo(function DataList({ items, onChange, id }: Props) {
   function handleSelect(station: string) {
     onChange(station);
     setStation(station);
-    track("station_select", { station });
+    track("station_select", { station, label: "select" });
     if (popoverRef.current) popoverRef.current.hidePopover();
   }
 
