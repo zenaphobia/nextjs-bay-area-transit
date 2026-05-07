@@ -8,6 +8,7 @@ import { getColorByLine } from "../transit/utils";
 import { ROUTE_TERMINUS } from "../transit/constants";
 import Countdown from "./Countdown/Countdown";
 import { Card } from "./ui/card";
+import DelayPill from "./TripCard/DelayPill";
 
 const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
   const departureTimeString = new Date(
@@ -98,13 +99,10 @@ const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
                   </div>
 
                   <div className="flex flex-col gap-1 text-right">
-                    {delay ? (
-                      <div className="flex px-4 py-0.5 text-center justify-center text-xs rounded-full bg-red-900">
-                        <h2 className="font-bold text-center">
-                          +{Math.floor(delay / 60)} MIN
-                        </h2>
-                      </div>
-                    ) : null}
+                    <DelayPill
+                      delay={delay ? Math.floor(delay / 60) : undefined}
+                      className="px-4 py-0.5 text-center"
+                    />
                     {!hasDeparted ? (
                       <motion.div exit={{ opacity: 0 }}>
                         <Countdown
@@ -157,13 +155,10 @@ const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
                   >
                     Platform {tram.platform}
                   </p>
-                  {delay ? (
-                    <div className="flex px-1 text-center justify-center text-[10px] min-w-[50px] rounded-full bg-red-900">
-                      <h2 className="font-bold text-center">
-                        +{Math.floor(delay / 60)} MIN
-                      </h2>
-                    </div>
-                  ) : null}
+                  <DelayPill
+                    delay={delay ? Math.floor(delay / 60) : undefined}
+                    className="px-1 text-[10px] min-w-[50px] text-center inline-block"
+                  />
                   <h1 className="text-lg font-bold mr-4 min-w-1/4">
                     {departureTimeString}
                   </h1>

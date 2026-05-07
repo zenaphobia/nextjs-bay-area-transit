@@ -221,6 +221,7 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
                 from { name lat lon departure { scheduledTime estimated { time delay } } }
                 to { name lat lon arrival { scheduledTime estimated { time delay } } }
                 route { gtfsId longName shortName }
+                id
               }
             }
           }

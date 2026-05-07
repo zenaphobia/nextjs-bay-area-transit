@@ -1,5 +1,5 @@
 "use client";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import "./styles.css";
 import { twJoin } from "tailwind-merge";
 import { useInterval } from "./hooks";
@@ -79,6 +79,12 @@ const Countdown = memo(function Countdown({
     },
     timerDone ? null : 1000,
   );
+
+  useEffect(() => {
+    if (timerDone) {
+      onDone?.();
+    }
+  }, [timerDone, onDone]);
 
   return (
     <div

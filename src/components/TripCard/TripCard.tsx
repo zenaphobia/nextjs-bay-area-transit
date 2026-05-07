@@ -8,6 +8,7 @@ import { twJoin, twMerge } from "tailwind-merge";
 import { Button } from "../ui/button";
 import { getColorByLine } from "@/transit/utils";
 import Countdown, { Fragment } from "../Countdown/Countdown";
+import DelayPill from "./DelayPill";
 import { useTransitStore } from "@/stores/global";
 import {
   Dialog,
@@ -31,16 +32,15 @@ const TripCard = memo(function TripCard({ trip }: Props) {
   const setActiveTrip = useTransitStore((s) => s.setActiveTrip);
   const articleRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
-  const departureTimeString = useMemo(
+  const firstLegDepartureTime = useMemo(
     () =>
-      new Date(
-        trip.legs[0].from.departure?.scheduledTime as string,
-      ).toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" }),
+      trip.legs[0].from.departure?.estimated?.time ??
+      (trip.legs[0].from.departure?.scheduledTime as string),
     [trip],
   );
   const departureDate = useMemo(
-    () => new Date(trip.legs[0].from.departure?.scheduledTime as string),
-    [trip],
+    () => new Date(firstLegDepartureTime),
+    [firstLegDepartureTime],
   );
   const [priority, setPriority] = useState(() => {
     const msUntilThreshold =
@@ -56,10 +56,32 @@ const TripCard = memo(function TripCard({ trip }: Props) {
     }
   }, [articleRef]);
   const [departed, setDeparted] = useState(() => {
-    const msUntilThreshold = departureDate.getTime() * 1000;
-
-    return msUntilThreshold <= 0 ? true : false;
+    return departureDate.getTime() - Date.now() <= 0;
   });
+  const hasDelays = useMemo(() => {
+    return trip.legs.find((l) => {
+      if (l.from.departure?.estimated) {
+        const delay = !l.from.departure?.estimated?.time
+          ? undefined
+          : Math.floor(
+              (new Date(l.from.departure.estimated.time).getTime() -
+                new Date(l.from.departure.scheduledTime).getTime()) /
+                1000 /
+                60,
+            );
+        if (delay) return true;
+      }
+    });
+  }, [trip]);
+
+  const departureTimeString = useMemo(
+    () =>
+      new Date(firstLegDepartureTime).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+      }),
+    [firstLegDepartureTime],
+  );
 
   const handleStartTrip = useCallback(() => {
     setActiveTrip(trip);
@@ -100,16 +122,25 @@ const TripCard = memo(function TripCard({ trip }: Props) {
               {trip.legs[0].from.name} → {trip.legs[0].to.name}
             </span>
           </span>
-          {priority ? (
-            <Countdown
-              target={trip.legs[0].from.departure!.scheduledTime}
-              fragment={TRIP_COUNTDOWN_FRAGMENT}
+          <div className="flex flex-col gap-1 w-1/2 justify-end">
+            <DelayPill
+              delay={hasDelays ? "Delayed" : undefined}
+              className="self-end w-max"
             />
-          ) : (
-            <h3 className="text-lg font-bold w-1/2 text-right">
-              {departed ? "Departed" : departureTimeString}
-            </h3>
-          )}
+            {priority && !departed ? (
+              <Countdown
+                target={firstLegDepartureTime}
+                fragment={TRIP_COUNTDOWN_FRAGMENT}
+                onDone={() => {
+                  setDeparted(true);
+                }}
+              />
+            ) : (
+              <h3 className="text-lg font-bold text-right">
+                {departed ? "Departed" : departureTimeString}
+              </h3>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -122,10 +153,18 @@ const TripCard = memo(function TripCard({ trip }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: expanded ? 8 : -8 }}
           >
-            {expanded && (
+            {expanded && !departed && (
               <>
                 {trip.legs.map((l, index) => {
                   const isLast = index === trip.legs.length - 1;
+                  const delay = !l.from.departure?.estimated?.time
+                    ? undefined
+                    : Math.floor(
+                        (new Date(l.from.departure.estimated.time).getTime() -
+                          new Date(l.from.departure.scheduledTime).getTime()) /
+                          1000 /
+                          60,
+                      );
                   return (
                     <div
                       key={`${l.mode}-${l.from.name}-${l.to.name}-${l.from.departure?.scheduledTime ?? l.to.arrival?.scheduledTime}-full`}
@@ -153,12 +192,19 @@ const TripCard = memo(function TripCard({ trip }: Props) {
                         <div className="flex gap-2 items-center mt-0.5">
                           <p className="font-black">
                             {l.from.departure &&
-                              new Date(
-                                l.from.departure.scheduledTime,
-                              ).toLocaleTimeString("en", {
-                                minute: "numeric",
-                                hour: "numeric",
-                              })}
+                              (delay
+                                ? new Date(
+                                    l.from.departure.estimated!.time,
+                                  ).toLocaleTimeString("en", {
+                                    minute: "numeric",
+                                    hour: "numeric",
+                                  })
+                                : new Date(
+                                    l.from.departure.scheduledTime,
+                                  ).toLocaleTimeString("en", {
+                                    minute: "numeric",
+                                    hour: "numeric",
+                                  }))}
                           </p>
                           <span
                             className={twMerge(
@@ -176,6 +222,7 @@ const TripCard = memo(function TripCard({ trip }: Props) {
                               ? l.route.shortName.split("-")[0] + " Line"
                               : "Walk"}
                           </span>
+                          <DelayPill delay={delay} />
                         </div>
                       </div>
                     </div>
