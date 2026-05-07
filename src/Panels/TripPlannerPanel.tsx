@@ -57,7 +57,7 @@ const GetTripsButton = memo(function GetTripsButton({
       size="lg"
       onClick={onClick}
       disabled={isDisabled}
-      className="w-7/8 text-md"
+      className="w-7/8 text-base"
     >
       {isLoading && <Spinner />}
       Find Trips
@@ -194,11 +194,9 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
   const [trips, setTrips] = useState<Edge[]>([]);
   const isDisabled = !originStation || !destinationStation || isLoading;
 
-  const clearTrip = useCallback(() => {
+  const clearTrips = useCallback(() => {
     setTrips([]);
-    setOriginStation(undefined);
-    setDestinationStation(undefined);
-  }, [setOriginStation, setDestinationStation]);
+  }, []);
 
   const handleFetch = useCallback(async () => {
     if (!originStation || !destinationStation) return;
@@ -252,7 +250,7 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
 
       const { data } = (await response.json()) as OTPResponse;
 
-      console.log(data.planConnection);
+      console.debug(data.planConnection);
       setTrips(data.planConnection.edges);
     } catch (err) {
       setError(err);
@@ -283,6 +281,7 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
               items={stopList}
               id="departing"
               onChange={setOriginStation}
+              onClear={clearTrips}
             />
             <StationPicker
               label="Choose Destination Station"
@@ -290,6 +289,7 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
               items={stopList}
               id="destination"
               onChange={setDestinationStation}
+              onClear={clearTrips}
             />
           </div>
 

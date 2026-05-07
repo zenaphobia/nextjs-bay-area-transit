@@ -1,15 +1,6 @@
 "use client";
 import { Node } from "@/types/otp";
-import {
-  memo,
-  MouseEvent as ReactMouseEvent,
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { TramFront, Footprints } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -213,11 +204,15 @@ export const StartTripButton = memo(function StartTripButton({
         <Dialog>
           <form>
             <DialogTrigger asChild>
-              <Button className="w-full">Start Trip</Button>
+              <Button size="lg" className="w-full text-base">
+                Start Trip
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
               <DialogHeader>
-                <DialogTitle>Replace active trip?</DialogTitle>
+                <DialogTitle className="text-lg">
+                  Replace active trip?
+                </DialogTitle>
                 <DialogDescription className="text-pretty">
                   You already have a trip in progress. Starting this one will
                   replace it.
@@ -225,17 +220,25 @@ export const StartTripButton = memo(function StartTripButton({
               </DialogHeader>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button className="text-base" size="lg" variant="outline">
+                    Cancel
+                  </Button>
                 </DialogClose>
                 <DialogClose asChild>
-                  <Button onClick={onHandleStart}>Replace Trip</Button>
+                  <Button
+                    className="text-base"
+                    size="lg"
+                    onClick={onHandleStart}
+                  >
+                    Replace Trip
+                  </Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
           </form>
         </Dialog>
       ) : (
-        <Button className="w-full" onClick={onHandleStart}>
+        <Button className="w-full text-base" size="lg" onClick={onHandleStart}>
           Start Trip
         </Button>
       )}

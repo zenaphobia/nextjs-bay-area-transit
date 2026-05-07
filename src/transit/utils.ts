@@ -2,11 +2,9 @@ import { transit_realtime } from "gtfs-realtime-bindings";
 
 export async function fetchFeed(url: string) {
   const res = await fetch(url);
-  // console.log({ res });
   const buffer = await res.arrayBuffer();
-  // console.log({ buffer });
   const feed = transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
-  console.log({ feed });
+  console.debug({ feed });
   return feed;
 }
 

@@ -27,7 +27,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
     for (let i = 0; i < activeTrip.legs.length; i++) {
       const dep = activeTrip.legs[i].from.departure?.scheduledTime;
       if (!dep) continue;
-      console.log({ idx });
+      console.debug({ idx });
       if (now > new Date(dep).getTime()) {
         idx = i;
       } else break;
@@ -50,10 +50,6 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
       : activeTrip?.legs[activeTrip.legs.length - 1].from;
 
   const ease = [0.32, 0.72, 0, 1] as const;
-
-  useEffect(() => {
-    console.log({ currentLegIndex });
-  }, [currentLegIndex, activeTrip]);
 
   return (
     <AnimatePresence initial={false}>
@@ -185,7 +181,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                   {activeTrip && (
                     <Button
                       onClick={handleCancelTrip}
-                      className="w-full"
+                      className="w-full text-base"
                       size={"lg"}
                       variant={"destructive"}
                     >

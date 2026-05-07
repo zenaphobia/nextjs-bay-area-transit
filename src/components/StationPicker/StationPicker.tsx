@@ -29,6 +29,7 @@ type Props = {
   label: string;
   value?: Stop;
   className?: string;
+  onClear?: () => void;
 };
 
 const DataList = memo(function DataList({
@@ -38,6 +39,7 @@ const DataList = memo(function DataList({
   label,
   value,
   className,
+  onClear,
 }: Props) {
   const uniqueStops = useMemo(() => {
     return items.filter(
@@ -74,7 +76,8 @@ const DataList = memo(function DataList({
 
   const clearField = useCallback(() => {
     handleSelect(undefined);
-  }, [handleSelect]);
+    onClear?.();
+  }, [handleSelect, onClear]);
 
   const handleOnFocus = useCallback(() => {
     setIsFocused(true);

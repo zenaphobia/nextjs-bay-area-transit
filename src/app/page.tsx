@@ -51,7 +51,7 @@ export default function Page() {
     transitFeed.trams?.entity.forEach((feedEntity) => {
       feedEntity.tripUpdate?.stopTimeUpdate?.forEach((stu, index) => {
         if (!stu.stopId) {
-          console.log("No stopID provided, skipping");
+          console.debug("No stopID provided, skipping");
           return;
         }
 
