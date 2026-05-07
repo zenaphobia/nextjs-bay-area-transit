@@ -45,7 +45,7 @@ const SavedTripsPanel = memo(function SavedTripsPanel() {
   const handleStationSet = (route: SavedRoute) => {
     setOriginStation(route.origin);
     setDestinationStation(route.destination);
-    setCurrentView("trips");
+    setCurrentView("trip_view");
   };
 
   return (
@@ -114,7 +114,7 @@ function NoSavedTrips() {
       <EmptyContent className="flex-row justify-center gap-2">
         <Button
           onClick={() => {
-            setCurrentView("trips");
+            setCurrentView("trip_view");
           }}
         >
           Find Trips

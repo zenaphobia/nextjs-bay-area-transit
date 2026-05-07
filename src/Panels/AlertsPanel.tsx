@@ -98,7 +98,7 @@ function ErrorFetchingServiceAlerts() {
       <EmptyContent className="flex-row justify-center gap-2">
         <Button
           onClick={() => {
-            setCurrentView("trips");
+            setCurrentView("trip_view");
           }}
         >
           Find Trips
