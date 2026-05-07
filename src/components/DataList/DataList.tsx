@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import "./styles.css";
 import { twMerge } from "tailwind-merge";
 import { Button } from "../ui/button";
+import { track } from "@/lib/analytics";
 
 type Props = {
   id: string;
@@ -32,6 +33,7 @@ const DataList = memo(function DataList({ items, onChange, id }: Props) {
   function handleSelect(station: string) {
     onChange(station);
     setStation(station);
+    track("station_select", { station });
     if (popoverRef.current) popoverRef.current.hidePopover();
   }
 

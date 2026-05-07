@@ -28,6 +28,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
+import { track } from "@/lib/analytics";
 
 export type Stop = {
   Name: string;
@@ -252,6 +253,10 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
 
       console.debug(data.planConnection);
       setTrips(data.planConnection.edges);
+      track("trip_search", {
+        origin: originStation.Name,
+        destination: destinationStation.Name,
+      });
     } catch (err) {
       setError(err);
     } finally {

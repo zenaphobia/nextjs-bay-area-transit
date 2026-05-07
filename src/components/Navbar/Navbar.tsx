@@ -43,6 +43,7 @@ const Navbar = memo(function Navbar() {
             <li key={v} className="flex flex-col items-center gap-1 rounded-md">
               <Button
                 onClick={() => {
+                  track("nav_click", { label: v });
                   setCurrentView(v);
                 }}
                 className="p-4 hover:bg-transparent!"
