@@ -10,6 +10,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import { useTransitStore } from "@/stores/global";
 import SavedTripsPanel from "@/Panels/SavedTripsPanel";
 import AlertsPanel from "@/Panels/AlertsPanel";
+import SettingsPanel from "@/Panels/SettingsPanel";
 import { Toaster } from "@/components/ui/sonner";
 import SplashAnimation from "./animation/WordmarkSplash";
 export type Station = {
@@ -112,6 +113,7 @@ export default function Page() {
     map_view: <BartMap stopList={stopList} stops={stops} />,
     savedTrips_view: <SavedTripsPanel />,
     alerts_view: <AlertsPanel alerts={serviceAlerts} />,
+    settings_view: <SettingsPanel />,
   }[currentView];
 
   return (

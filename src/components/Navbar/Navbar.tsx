@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Bookmark, Map, Route } from "lucide-react";
+import { Bell, Bookmark, Map, Route, Settings } from "lucide-react";
 import { memo, type ComponentType, type SVGProps } from "react";
 import { View, views } from "./types";
 import { Button } from "../ui/button";
@@ -13,6 +13,7 @@ const viewIcons: Record<View, ComponentType<SVGProps<SVGSVGElement>>> = {
   map_view: Map,
   savedTrips_view: Bookmark,
   alerts_view: Bell,
+  settings_view: Settings,
 };
 
 const Navbar = memo(function Navbar() {
@@ -27,12 +28,12 @@ const Navbar = memo(function Navbar() {
       className="w-[80%] border-primary-foreground border rounded-lg mb-4"
       aria-label="Primary"
     >
-      <ul className="grid grid-cols-4 relative p-4">
+      <ul className="grid grid-cols-5 relative p-4">
         <motion.div
           aria-hidden="true"
           animate={{ x: `${currentIndex * 100}%` }}
           transition={{ type: "spring", stiffness: 400, damping: 32 }}
-          className="absolute inset-y-4 left-6 w-[calc((100%-3rem)/4)] border-primary/15 border bg-secondary flex items-center justify-center rounded-md"
+          className="absolute inset-y-4 left-6 w-[calc((100%-3rem)/5)] border-primary/15 border bg-secondary flex items-center justify-center rounded-md"
         >
           <CurrentIcon aria-hidden="true" className="size-6" />
         </motion.div>

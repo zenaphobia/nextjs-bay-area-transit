@@ -3,5 +3,6 @@ export const views = [
   "map_view",
   "savedTrips_view",
   "alerts_view",
+  "settings_view",
 ] as const;
 export type View = (typeof views)[number];
