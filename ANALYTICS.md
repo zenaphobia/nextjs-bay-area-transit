@@ -24,7 +24,7 @@ The helper is a no-op when `gtag` isn't loaded (dev, ad blockers, GA disabled), 
 
 All event names follow `{area}_{action}`, lowercase, snake_case.
 
-- **area** — the part of the app the event happened in (`nav`, `trip`, `station`, `map`, `alert`, `settings`)
+- **area** — the part of the app the event happened in (`nav`, `trip`, `station`, `map`, `alert`, `settings`, `pwa`)
 - **action** — what the user did (`click`, `search`, `select`, `open`, `dismiss`, `submit`)
 
 Examples:
@@ -38,6 +38,17 @@ Examples:
 | `alert_dismiss` | User dismisses a service alert             |
 
 Keep the vocabulary small. If you find yourself inventing a new area, check whether an existing one fits first — `nav_*` and `header_*` would be a smell.
+
+### PWA install funnel
+
+Wired in [src/app/register-sw.tsx](src/app/register-sw.tsx) to measure install reach across browsers. iOS Safari hides "Add to Home Screen" from JS, so `pwa_first_standalone_launch` is the install proxy on that platform.
+
+| Event                          | When it fires                                                                                                       |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `pwa_install_eligible`         | Browser fires `beforeinstallprompt` (Chromium says install criteria are met). No iOS coverage.                      |
+| `pwa_installed`                | Browser fires `appinstalled` after a successful install. Chromium only — iOS does not emit this event.              |
+| `pwa_launched_standalone`      | Every load where `display-mode: standalone` matches or `navigator.standalone === true`. Engagement signal.          |
+| `pwa_first_standalone_launch`  | First observed standalone load, deduped via the `pwa_first_standalone_seen` localStorage flag. Install proxy on iOS. |
 
 ## Parameters
 
