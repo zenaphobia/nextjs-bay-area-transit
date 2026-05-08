@@ -11,16 +11,17 @@ import { Card } from "./ui/card";
 import DelayPill from "./TripCard/DelayPill";
 
 const TramCard = memo(function TramCard({ tram }: { tram: Tram }) {
-  const departureTimeString = new Date(
-    (tram.StopTimeUpdate.departure?.time as number) * 1000,
-  ).toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric" });
-
   const departureDate = useMemo(
     () => new Date((tram.StopTimeUpdate.departure?.time as number) * 1000),
     [tram.StopTimeUpdate.departure?.time],
   );
 
-  const delay = tram.StopTimeUpdate.arrival?.delay;
+  const departureTimeString = departureDate.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+  });
+
+  const delay = tram.StopTimeUpdate.departure?.delay;
   const [display, setDisplay] = useState<"full" | "compact">(() => {
     const now = Date.now();
     const distanceInMin = Math.floor(

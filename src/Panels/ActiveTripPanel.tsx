@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { ChevronDown } from "lucide-react";
+import DelayPill from "@/components/TripCard/DelayPill";
 
 const ActiveTripPlanel = memo(function ActiveTripPanel() {
   const activeTrip = useTransitStore((s) => s.activeTrip);
@@ -25,9 +26,9 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
     if (!activeTrip?.legs) return -1;
     let idx = 0;
     for (let i = 0; i < activeTrip.legs.length; i++) {
-      const dep = activeTrip.legs[i].from.departure?.scheduledTime;
+      const departure = activeTrip.legs[i].from.departure;
+      const dep = departure?.estimated?.time ?? departure?.scheduledTime;
       if (!dep) continue;
-      console.debug({ idx });
       if (now > new Date(dep).getTime()) {
         idx = i;
       } else break;
@@ -104,6 +105,18 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                       const isLast = index === activeTrip.legs.length - 1;
                       const isPast = index < currentLegIndex;
                       const isCurrent = index === currentLegIndex;
+                      const delay = !l.from.departure?.estimated?.time
+                        ? undefined
+                        : Math.floor(
+                            (new Date(
+                              l.from.departure.estimated.time,
+                            ).getTime() -
+                              new Date(
+                                l.from.departure.scheduledTime,
+                              ).getTime()) /
+                              1000 /
+                              60,
+                          );
                       return (
                         <motion.div
                           key={`${l.mode}-${l.from.name}-${l.to.name}-${l.from.departure?.scheduledTime ?? l.to.arrival?.scheduledTime}-full`}
@@ -151,7 +164,9 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                               <p className="font-black">
                                 {l.from.departure &&
                                   new Date(
-                                    l.from.departure.scheduledTime,
+                                    delay
+                                      ? l.from.departure.estimated!.time
+                                      : l.from.departure.scheduledTime,
                                   ).toLocaleTimeString("en", {
                                     minute: "numeric",
                                     hour: "numeric",
@@ -173,6 +188,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                                   ? ROUTE_TERMINUS[l.route.shortName].compact
                                   : "Walk"}
                               </span>
+                              <DelayPill delay={delay} />
                             </div>
                           </div>
                         </motion.div>
