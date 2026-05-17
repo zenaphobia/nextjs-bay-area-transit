@@ -6,11 +6,17 @@
 
 :root {
   --green-line: #50b748;
+  --green-content: #1d4519
   --red-line: #ec1c24;
+  --red-content: #3b0709;
   --yellow-line: #ffe600;
+  --yellow-content: #3b3501;
   --orange-line: #f9a61b;
+  --orange-content: #4f360a;
   --blue-line: #2c7d9e;
+  --blue-content: #0a1d25;
   --gray-line: #b0bdc6;
+  --gray-content: #16181a;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -51,11 +57,17 @@
   --font-mono: var(--font-jetBrains-mono);
 
   --color-greenline: var(--green-line);
+  --color-greenline-content: var(--green-content);
   --color-redline: var(--red-line);
+  --color-redline-content: var(--red-content);
   --color-yellowline: var(--yellow-line);
+  --color-yellowline-content: var(--yellow-content);
   --color-blueline: var(--blue-line);
+  --color-blueline-content: var(--blue-content);
   --color-orangeline: var(--orange-line);
+  --color-orangeline-content: var(--orange-content);
   --color-grayline: var(--gray-line);
+  --color-grayline-content: var(--gray-content);
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
   --color-sidebar-ring: var(--sidebar-ring);

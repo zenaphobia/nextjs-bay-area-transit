@@ -5,7 +5,7 @@ import type { transit_realtime } from "gtfs-realtime-bindings";
 import { Stop, Tram } from "@/types/types";
 import BartMap from "@/components/BartMap/BartMap";
 import TripPlannerPanel from "@/Panels/TripPlannerPanel";
-import ActiveTripPlanel from "@/Panels/ActiveTripPanel";
+import ActiveTripPanel from "@/Panels/ActiveTripPanel";
 import Navbar from "@/components/Navbar/Navbar";
 import { useTransitStore } from "@/stores/global";
 import SavedTripsPanel from "@/Panels/SavedTripsPanel";
@@ -109,7 +109,12 @@ export default function Page() {
 
   const currentView = useTransitStore((s) => s.currentView);
   const Panel = {
-    trip_view: <TripPlannerPanel stopList={stopList} />,
+    trip_view: (
+      <TripPlannerPanel
+        stopList={stopList}
+        stopIdPlatformMap={stopIdPlatformMap}
+      />
+    ),
     map_view: <BartMap stopList={stopList} stops={stops} />,
     savedTrips_view: <SavedTripsPanel />,
     alerts_view: <AlertsPanel alerts={serviceAlerts} />,
@@ -120,7 +125,7 @@ export default function Page() {
     <>
       <main className="text-white overflow-hidden relative flex flex-col items-center justify-center w-screen h-dvh font-mono">
         <SplashAnimation />
-        <ActiveTripPlanel />
+        <ActiveTripPanel stopIdPlatformMap={stopIdPlatformMap} />
         <section className="overflow-hidden flex-1 min-h-0 w-full">
           {Panel}
         </section>

@@ -40,6 +40,9 @@ export type StopDetails = {
   name: string;
   lat: number;
   lon: number;
+  stop: {
+    gtfsId: string;
+  } | null;
   departure?: {
     scheduledTime: string;
     estimated: EstimatedTime | null;

@@ -183,9 +183,13 @@ const SaveTripButton = memo(function SaveTripButton({
 
 type Props = {
   stopList: stopList;
+  stopIdPlatformMap: Map<string, string>;
 };
 
-const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
+const TripPlannerPanel = memo(function TripPlannerPanel({
+  stopList,
+  stopIdPlatformMap,
+}: Props) {
   const originStation = useTransitStore((s) => s.originStation);
   const destinationStation = useTransitStore((s) => s.destinationStation);
   const setOriginStation = useTransitStore((s) => s.setOriginStation);
@@ -218,8 +222,8 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
               end
               legs {
                 mode
-                from { name lat lon departure { scheduledTime estimated { time delay } } }
-                to { name lat lon arrival { scheduledTime estimated { time delay } } }
+                from { name lat lon stop { gtfsId } departure { scheduledTime estimated { time delay } } }
+                to { name lat lon stop { gtfsId } arrival { scheduledTime estimated { time delay } } }
                 route { gtfsId longName shortName }
                 id
               }
@@ -312,13 +316,19 @@ const TripPlannerPanel = memo(function TripPlannerPanel({ stopList }: Props) {
             />
           </div>
         </section>
-        <TripSection trips={trips} />
+        <TripSection trips={trips} stopIdPlatformMap={stopIdPlatformMap} />
       </div>
     </section>
   );
 });
 
-const TripSection = memo(function TripSection({ trips }: { trips: Edge[] }) {
+const TripSection = memo(function TripSection({
+  trips,
+  stopIdPlatformMap,
+}: {
+  trips: Edge[];
+  stopIdPlatformMap: Map<string, string>;
+}) {
   return (
     <>
       {trips.length > 0 ? (
@@ -327,7 +337,7 @@ const TripSection = memo(function TripSection({ trips }: { trips: Edge[] }) {
           animate={{ opacity: 1 }}
           className="flex flex-1 flex-col justify-between overflow-hidden"
         >
-          <TripList trips={trips} />
+          <TripList trips={trips} stopIdPlatformMap={stopIdPlatformMap} />
           <div className="text-center text-sm opacity-50 mt-4">
             <span>{trips?.length} trips found</span>
           </div>
@@ -349,7 +359,13 @@ const TripSection = memo(function TripSection({ trips }: { trips: Edge[] }) {
   );
 });
 
-const TripList = memo(function TripList({ trips }: { trips: Edge[] }) {
+const TripList = memo(function TripList({
+  trips,
+  stopIdPlatformMap,
+}: {
+  trips: Edge[];
+  stopIdPlatformMap: Map<string, string>;
+}) {
   return (
     <ul className="space-y-4 overflow-y-auto">
       {trips.map((t, i) => {
@@ -365,7 +381,7 @@ const TripList = memo(function TripList({ trips }: { trips: Edge[] }) {
             {/* <p className="text-sm opacity-50 mb-1">
               Trip {i + 1} of {trips.length}
             </p> */}
-            <TripCard trip={t.node} />
+            <TripCard trip={t.node} stopIdPlatformMap={stopIdPlatformMap} />
           </motion.li>
         );
       })}

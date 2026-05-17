@@ -10,7 +10,13 @@ import { twMerge } from "tailwind-merge";
 import { ChevronDown } from "lucide-react";
 import DelayPill from "@/components/TripCard/DelayPill";
 
-const ActiveTripPlanel = memo(function ActiveTripPanel() {
+type Props = {
+  stopIdPlatformMap: Map<string, string>;
+};
+
+const ActiveTripPlanel = memo(function ActiveTripPanel({
+  stopIdPlatformMap,
+}: Props) {
   const activeTrip = useTransitStore((s) => s.activeTrip);
   const setActiveTrip = useTransitStore((s) => s.setActiveTrip);
   const [collapsed, setCollapsed] = useState(true);
@@ -117,6 +123,11 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                               1000 /
                               60,
                           );
+                      const platform = l.from.stop
+                        ? stopIdPlatformMap.get(
+                            l.from.stop.gtfsId.split(":")[1],
+                          )
+                        : undefined;
                       return (
                         <motion.div
                           key={`${l.mode}-${l.from.name}-${l.to.name}-${l.from.departure?.scheduledTime ?? l.to.arrival?.scheduledTime}-full`}
@@ -160,7 +171,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                             >
                               {l.from.name} → {l.to.name}
                             </h4>
-                            <div className="flex gap-2 items-center mt-0.5">
+                            <div className="flex flex-wrap gap-2 items-center mt-0.5">
                               <p className="font-black">
                                 {l.from.departure &&
                                   new Date(
@@ -175,19 +186,29 @@ const ActiveTripPlanel = memo(function ActiveTripPanel() {
                               <span
                                 className={twMerge(
                                   getColorByLine(l.route?.shortName, "bg"),
-                                  "w-2 h-2 rounded-full",
-                                )}
-                              />
-                              <span
-                                className={twMerge(
-                                  getColorByLine(l.route?.shortName, "text"),
-                                  "text-xs font-light opacity-75",
+                                  getColorByLine(l.route?.shortName, "content"),
+                                  "px-2 rounded-full space-x-2 font-bold",
                                 )}
                               >
-                                {l.route?.shortName
-                                  ? ROUTE_TERMINUS[l.route.shortName].compact
-                                  : "Walk"}
+                                {l.route?.shortName && (
+                                  <span>{l.route?.shortName[0]} •</span>
+                                )}
+                                <span>
+                                  {l.route?.shortName
+                                    ? ROUTE_TERMINUS[l.route.shortName].compact
+                                    : "Walk"}
+                                </span>
                               </span>
+                              {platform && (
+                                <span
+                                  className={twMerge(
+                                    getColorByLine(l.route?.shortName, "text"),
+                                    "text-xs text-nowrap",
+                                  )}
+                                >
+                                  Platform {platform}
+                                </span>
+                              )}
                               <DelayPill delay={delay} />
                             </div>
                           </div>

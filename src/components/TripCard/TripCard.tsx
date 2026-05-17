@@ -20,14 +20,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ROUTE_TERMINUS } from "@/transit/constants";
 
 type Props = {
   trip: Node;
+  stopIdPlatformMap: Map<string, string>;
 };
 
 const TRIP_COUNTDOWN_FRAGMENT: Fragment[] = ["minutes", "seconds"];
 
-const TripCard = memo(function TripCard({ trip }: Props) {
+const TripCard = memo(function TripCard({ trip, stopIdPlatformMap }: Props) {
   const activeTrip = useTransitStore((s) => s.activeTrip);
   const setActiveTrip = useTransitStore((s) => s.setActiveTrip);
   const articleRef = useRef<HTMLDivElement>(null);
@@ -165,6 +167,9 @@ const TripCard = memo(function TripCard({ trip }: Props) {
                           1000 /
                           60,
                       );
+                  const platform = l.from.stop
+                    ? stopIdPlatformMap.get(l.from.stop.gtfsId.split(":")[1])
+                    : undefined;
                   return (
                     <div
                       key={`${l.mode}-${l.from.name}-${l.to.name}-${l.from.departure?.scheduledTime ?? l.to.arrival?.scheduledTime}-full`}
@@ -189,7 +194,7 @@ const TripCard = memo(function TripCard({ trip }: Props) {
                         >
                           {l.from.name} → {l.to.name}
                         </h4>
-                        <div className="flex gap-2 items-center mt-0.5">
+                        <div className="flex flex-wrap gap-2 items-center mt-0.5">
                           <p className="font-black">
                             {l.from.departure &&
                               (delay
@@ -209,19 +214,29 @@ const TripCard = memo(function TripCard({ trip }: Props) {
                           <span
                             className={twMerge(
                               getColorByLine(l.route?.shortName, "bg"),
-                              "w-2 h-2 rounded-full",
-                            )}
-                          />
-                          <span
-                            className={getColorByLine(
-                              l.route?.shortName,
-                              "text",
+                              getColorByLine(l.route?.shortName, "content"),
+                              "px-2 rounded-full space-x-2 font-bold",
                             )}
                           >
-                            {l.route?.shortName
-                              ? l.route.shortName.split("-")[0] + " Line"
-                              : "Walk"}
+                            {l.route?.shortName && (
+                              <span>{l.route?.shortName[0]} •</span>
+                            )}
+                            <span>
+                              {l.route?.shortName
+                                ? ROUTE_TERMINUS[l.route.shortName].compact
+                                : "Walk"}
+                            </span>
                           </span>
+                          {platform && (
+                            <span
+                              className={twMerge(
+                                getColorByLine(l.route?.shortName, "text"),
+                                "text-xs text-nowrap",
+                              )}
+                            >
+                              Platform {platform}
+                            </span>
+                          )}
                           <DelayPill delay={delay} />
                         </div>
                       </div>

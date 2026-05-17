@@ -10,23 +10,44 @@ export async function fetchFeed(url: string) {
 
 export function getColorByLine(
   line: string | undefined,
-  token: "bg" | "text" = "bg",
+  token: "bg" | "text" | "border" | "content" = "bg",
 ): string {
   if (!line) {
-    return token === "bg" ? "bg-foreground" : "text-foreground";
+    if (token === "bg") return "bg-foreground";
+    if (token === "text") return "text-foreground";
+    if (token === "content") return "text-background";
+    return "border-foreground";
   }
 
   if (line.startsWith("Blue")) {
-    return token === "bg" ? "bg-blueline" : "text-blueline";
+    if (token === "bg") return "bg-blueline";
+    if (token === "text") return "text-blueline";
+    if (token === "content") return "text-blueline-content";
+    return "border-blueline";
   } else if (line.startsWith("Red")) {
-    return token === "bg" ? "bg-redline" : "text-redline";
+    if (token === "bg") return "bg-redline";
+    if (token === "text") return "text-redline";
+    if (token === "content") return "text-redline-content";
+    return "border-redline";
   } else if (line.startsWith("Yellow")) {
-    return token === "bg" ? "bg-yellowline" : "text-yellowline";
+    if (token === "bg") return "bg-yellowline";
+    if (token === "text") return "text-yellowline";
+    if (token === "content") return "text-yellowline-content";
+    return "border-yellowline";
   } else if (line.startsWith("Green")) {
-    return token === "bg" ? "bg-greenline" : "text-greenline";
+    if (token === "bg") return "bg-greenline";
+    if (token === "text") return "text-greenline";
+    if (token === "content") return "text-greenline-content";
+    return "border-greenline";
   } else if (line.startsWith("Orange")) {
-    return token === "bg" ? "bg-orangeline" : "text-orangeline";
+    if (token === "bg") return "bg-orangeline";
+    if (token === "text") return "text-orangeline";
+    if (token === "content") return "text-orangeline-content";
+    return "border-orangeline";
   } else {
-    return token === "bg" ? "bg-grayline" : "text-grayline";
+    if (token === "bg") return "bg-grayline";
+    if (token === "text") return "text-grayline";
+    if (token === "content") return "text-grayline-content";
+    return "border-grayline";
   }
 }
