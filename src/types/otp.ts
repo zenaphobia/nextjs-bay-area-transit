@@ -28,6 +28,7 @@ export type Leg = {
   from: StopDetails;
   to: StopDetails;
   route: Route | null;
+  id: string;
 };
 
 export type Route = {

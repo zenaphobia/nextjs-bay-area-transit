@@ -9,6 +9,8 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { ChevronDown } from "lucide-react";
 import DelayPill from "@/components/TripCard/DelayPill";
+import { useInterval } from "@/components/Countdown/hooks";
+import { legQuery } from "@/queries/graphiql";
 
 type Props = {
   stopIdPlatformMap: Map<string, string>;
@@ -21,6 +23,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
   const setActiveTrip = useTransitStore((s) => s.setActiveTrip);
   const [collapsed, setCollapsed] = useState(true);
   const [now, setNow] = useState(() => Date.now());
+  const endpoint = process.env.NEXT_PUBLIC_OTP_URL;
 
   useEffect(() => {
     if (!activeTrip) return;
@@ -28,18 +31,62 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
     return () => clearInterval(id);
   }, [activeTrip]);
 
+  useInterval(
+    () => {
+      if (!activeTrip) return;
+      if (!endpoint) {
+        throw new Error("No endpoint");
+      }
+
+      Promise.all(
+        activeTrip.legs.map(async (leg) => {
+          if (leg.mode === "WALK") return leg;
+          if (!leg.id) {
+            console.warn("No ID provided for leg update");
+            return leg;
+          }
+
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              query: legQuery,
+              variables: { id: leg.id },
+            }),
+          });
+          if (!res.ok) return leg;
+
+          const { data } = await res.json();
+          return {
+            ...leg,
+            from: { ...leg.from, departure: data.leg.from.departure },
+            to: { ...leg.to, arrival: data.leg.to.arrival },
+          };
+        }),
+      ).then((updatedLegs) => {
+        setActiveTrip({ ...activeTrip, legs: updatedLegs });
+      });
+    },
+    activeTrip ? 1000 * 60 : null,
+  );
+
   const currentLegIndex = useMemo(() => {
     if (!activeTrip?.legs) return -1;
     let idx = 0;
-    for (let i = 0; i < activeTrip.legs.length; i++) {
-      const departure = activeTrip.legs[i].from.departure;
-      const dep = departure?.estimated?.time ?? departure?.scheduledTime;
-      if (!dep) continue;
-      if (now > new Date(dep).getTime()) {
-        idx = i;
-      } else break;
+    try {
+      for (let i = 0; i < activeTrip.legs.length; i++) {
+        const departure = activeTrip.legs[i].from.departure;
+        const dep = departure?.estimated?.time ?? departure?.scheduledTime;
+        if (!dep) continue;
+        if (now > new Date(dep).getTime()) {
+          idx = i;
+        } else break;
+      }
+      return idx;
+    } catch {
+      console.error("Failed to get currentLegIndex");
+      return -1;
     }
-    return idx;
   }, [activeTrip, now]);
 
   const handleCancelTrip = useCallback(() => {

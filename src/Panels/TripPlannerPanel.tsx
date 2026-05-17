@@ -29,6 +29,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty";
 import { track } from "@/lib/analytics";
+import { PlanTripQuery } from "@/queries/graphiql";
 
 export type Stop = {
   Name: string;
@@ -208,31 +209,6 @@ const TripPlannerPanel = memo(function TripPlannerPanel({
 
     setIsLoading(true);
 
-    const query = `
-    query PlanTrip($originLat: CoordinateValue!, $originLon: CoordinateValue!, $destLat: CoordinateValue!, $destLon: CoordinateValue!, $dateTime: OffsetDateTime) {
-      planConnection(
-        origin: {location: {coordinate: {latitude: $originLat, longitude: $originLon}}}
-        destination: {location: {coordinate: {latitude: $destLat, longitude: $destLon}}}
-        dateTime: {earliestDeparture: $dateTime}
-        modes: {transit: {transit: [{mode: SUBWAY}]}}
-      ) {
-          edges {
-            node {
-              start
-              end
-              legs {
-                mode
-                from { name lat lon stop { gtfsId } departure { scheduledTime estimated { time delay } } }
-                to { name lat lon stop { gtfsId } arrival { scheduledTime estimated { time delay } } }
-                route { gtfsId longName shortName }
-                id
-              }
-            }
-          }
-          }
-          }
-        `;
-
     const variables: OTPInputVariables = {
       originLat: Number(originStation.Location.Latitude),
       originLon: Number(originStation.Location.Longitude),
@@ -251,7 +227,7 @@ const TripPlannerPanel = memo(function TripPlannerPanel({
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, variables }),
+        body: JSON.stringify({ query: PlanTripQuery, variables }),
       });
 
       const { data } = (await response.json()) as OTPResponse;
