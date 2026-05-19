@@ -119,7 +119,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
           onClick={() => {
             setCollapsed((prev) => !prev);
           }}
-          className="font-mono bg-secondary w-full overflow-hidden z-[20] cursor-pointer"
+          className="font-mono bg-secondary w-full z-[20] cursor-pointer relative"
           aria-labelledby="active-trip-title"
         >
           <header className="p-4 w-full flex justify-between items-center">
@@ -150,7 +150,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
                   height: { duration: 0.35, ease },
                   opacity: { duration: 0.25, ease, delay: 0.05 },
                 }}
-                className="overflow-hidden"
+                className="absolute top-[85px] left-0 bg-secondary"
               >
                 <div className="p-4">
                   {activeTrip &&
@@ -263,14 +263,23 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
                       );
                     })}
                   {activeTrip && (
-                    <Button
-                      onClick={handleCancelTrip}
-                      className="w-full text-base"
-                      size={"lg"}
-                      variant={"destructive"}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        opacity: { duration: 0.25, ease, delay: 0.25 },
+                      }}
                     >
-                      End Trip
-                    </Button>
+                      <Button
+                        onClick={handleCancelTrip}
+                        className="w-full text-base"
+                        size={"lg"}
+                        variant={"destructive"}
+                      >
+                        End Trip
+                      </Button>
+                    </motion.div>
                   )}
                 </div>
               </motion.div>
