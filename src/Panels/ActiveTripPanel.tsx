@@ -234,7 +234,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
                                 className={twMerge(
                                   getColorByLine(l.route?.shortName, "bg"),
                                   getColorByLine(l.route?.shortName, "content"),
-                                  "px-2 rounded-full space-x-2 font-bold",
+                                  "px-2 rounded-full space-x-2 font-bold text-sm",
                                 )}
                               >
                                 {l.route?.shortName && (
