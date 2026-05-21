@@ -176,7 +176,7 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
                   height: { duration: 0.35, ease },
                   opacity: { duration: 0.25, ease, delay: 0.05 },
                 }}
-                className="absolute top-[85px] left-0 bg-secondary"
+                className="absolute top-[85px] left-0 bg-secondary w-full"
               >
                 <div className="p-4">
                   {activeTrip &&
