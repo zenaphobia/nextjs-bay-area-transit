@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useTransitStore } from "@/stores/global";
 import { ROUTE_TERMINUS } from "@/transit/constants";
 import { getColorByLine } from "@/transit/utils";
-import { TramFront, Footprints } from "lucide-react";
+import { TramFront, Footprints, AlertTriangle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -11,6 +11,13 @@ import { ChevronDown } from "lucide-react";
 import DelayPill from "@/components/TripCard/DelayPill";
 import { useInterval } from "@/components/Countdown/hooks";
 import { legQuery } from "@/queries/graphiql";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type Props = {
   stopIdPlatformMap: Map<string, string>;
@@ -24,6 +31,8 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
   const [collapsed, setCollapsed] = useState(true);
   const [now, setNow] = useState(() => Date.now());
   const endpoint = process.env.NEXT_PUBLIC_OTP_URL;
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const showWarning = failedAttempts >= 10;
 
   useEffect(() => {
     if (!activeTrip) return;
@@ -63,12 +72,26 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
             to: { ...leg.to, arrival: data.leg.to.arrival },
           };
         }),
-      ).then((updatedLegs) => {
-        setActiveTrip({ ...activeTrip, legs: updatedLegs });
-      });
+      )
+        .then((updatedLegs) => {
+          setActiveTrip({ ...activeTrip, legs: updatedLegs });
+          setFailedAttempts(0);
+        })
+        .catch((e) => {
+          console.error("[TripPoll] Failed to fetch data from API");
+          setFailedAttempts((prev) => prev + 1);
+        });
     },
     activeTrip ? 1000 * 60 : null,
   );
+
+  useEffect(() => {
+    if (failedAttempts >= 10) {
+      console.error(
+        "[TripPoll] Failed to fetch data from the last 10 attempts",
+      );
+    }
+  });
 
   const currentLegIndex = useMemo(() => {
     if (!activeTrip?.legs) return -1;
@@ -129,12 +152,15 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
               </h2>
               {`${start?.name} → ${end?.name} `}
             </div>
-            <ChevronDown
-              className="transition-transform"
-              style={{
-                transform: collapsed ? "rotate(0deg)" : "rotate(180deg)",
-              }}
-            />
+            <div className="flex gap-2 items-center justify-center">
+              {showWarning && <StaleDataWarning />}
+              <ChevronDown
+                className="transition-transform"
+                style={{
+                  transform: collapsed ? "rotate(0deg)" : "rotate(180deg)",
+                }}
+              />
+            </div>
           </header>
 
           <Separator />
@@ -288,6 +314,32 @@ const ActiveTripPlanel = memo(function ActiveTripPanel({
         </motion.section>
       )}
     </AnimatePresence>
+  );
+});
+
+const StaleDataWarning = memo(function StaleDataWarning() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          className="text-yellow-500"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          variant="outline"
+          size={"icon-lg"}
+        >
+          <AlertTriangle className="size-5 shrink-0" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80">
+        <div className="space-y-2 p-2">
+          <p className="text-sm text-muted-foreground">
+            Live data is unavailable. Schedules shown may be out of date.
+          </p>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 });
 

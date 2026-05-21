@@ -56,5 +56,5 @@ A real-time BART transit tracker built with React, TypeScript, and Next.js. This
 - [ ] Add Storybook to the project for component-level development and documentation
 - [ ] Wire up Chromatic for visual regression + interaction tests on Storybook stories (basic integration coverage on `TripCard`, `DelayPill`, `ActiveTripPanel`, etc.)
 - [ ] Add per-stop click handlers on the BART map to surface departures in the UI
-- [ ] Expand map viewport for mobile so routes aren't clipped
-- [ ] Final UX pass: holistic review of transitions between stops, trip planning, and active-trip states for cohesion
+- [x] Expand map viewport for mobile so routes aren't clipped
+- [x] Final UX pass: holistic review of transitions between stops, trip planning, and active-trip states for cohesion
