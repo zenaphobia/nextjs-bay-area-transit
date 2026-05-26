@@ -1,6 +1,7 @@
 import { View } from "@/components/Navbar/types";
 import { Stop } from "@/Panels/TripPlannerPanel";
 import { Node } from "@/types/otp";
+import { useEffect, useSyncExternalStore } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -46,6 +47,21 @@ export const useTransitStore = create<GlobalStore>()(
         destinationStation: state.destinationStation,
         activeTrip: state.activeTrip,
       }),
+      skipHydration: true,
     },
   ),
 );
+
+export function useHasHydrated() {
+  const hydrated = useSyncExternalStore(
+    (cb) => useTransitStore.persist.onFinishHydration(cb),
+    () => useTransitStore.persist.hasHydrated(),
+    () => false,
+  );
+
+  useEffect(() => {
+    if (!hydrated) void useTransitStore.persist.rehydrate();
+  }, [hydrated]);
+
+  return hydrated;
+}

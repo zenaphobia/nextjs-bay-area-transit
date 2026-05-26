@@ -17,17 +17,17 @@ const SplashAnimation = memo(function SplashAnimation() {
       gsap.set("#tram", { xPercent: -100, yPercent: -15, opacity: 0 });
       t1.current = gsap
         .timeline({ defaults: { ease: "expo.out" } })
-        .to("#wordmark", { opacity: 1 }, 0)
+        .to("#wordmark", { opacity: 1, xPercent: 5 }, 0)
         .to("#tram", { xPercent: 25, opacity: 1 }, 0)
-        .to("#name", { opacity: 1 }, 0)
-        .to(container.current, {
-          opacity: 0,
-          delay: 1,
-          animation: 100,
-          onComplete: () => {
-            setDone(true);
-          },
-        });
+        .to("#name", { opacity: 1 }, 0);
+      // .to(container.current, {
+      //   opacity: 0,
+      //   delay: 1,
+      //   animation: 100,
+      //   onComplete: () => {
+      //     setDone(true);
+      //   },
+      // });
     },
     { scope: container },
   );
@@ -41,11 +41,7 @@ const SplashAnimation = memo(function SplashAnimation() {
       ref={container}
     >
       <Tram />
-      <div
-        style={{ opacity: 0 }}
-        id="name"
-        className="flex -translate-x-[15px]"
-      >
+      <div style={{ opacity: 0 }} id="name" className="flex">
         <h1 className="font-mono text-2xl text-center">terminal</h1>
         <span id="cursor" className="font-mono text-2xl animate-blink">
           _

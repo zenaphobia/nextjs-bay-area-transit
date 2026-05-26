@@ -7,7 +7,7 @@ import BartMap from "@/components/BartMap/BartMap";
 import TripPlannerPanel from "@/Panels/TripPlannerPanel";
 import ActiveTripPanel from "@/Panels/ActiveTripPanel";
 import Navbar from "@/components/Navbar/Navbar";
-import { useTransitStore } from "@/stores/global";
+import { useHasHydrated, useTransitStore } from "@/stores/global";
 import SavedTripsPanel from "@/Panels/SavedTripsPanel";
 import AlertsPanel from "@/Panels/AlertsPanel";
 import SettingsPanel from "@/Panels/SettingsPanel";
@@ -107,6 +107,7 @@ export default function Page() {
     return startPoll();
   }, [startPoll]);
 
+  const hasHydrated = useHasHydrated();
   const currentView = useTransitStore((s) => s.currentView);
   const Panel = {
     trip_view: (
@@ -125,11 +126,15 @@ export default function Page() {
     <>
       <main className="text-white overflow-hidden relative flex flex-col items-center justify-center w-screen h-dvh font-mono">
         <SplashAnimation />
-        <ActiveTripPanel stopIdPlatformMap={stopIdPlatformMap} />
-        <section className="overflow-hidden flex-1 min-h-0 w-full">
-          {Panel}
-        </section>
-        <Navbar />
+        {hasHydrated && (
+          <>
+            <ActiveTripPanel stopIdPlatformMap={stopIdPlatformMap} />
+            <section className="overflow-hidden flex-1 min-h-0 w-full">
+              {Panel}
+            </section>
+            <Navbar />
+          </>
+        )}
       </main>
       <Toaster />
     </>

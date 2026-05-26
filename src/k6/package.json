@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "loadtest": "k6 run -e OTP_URL=https://otp-bart.fly.dev/otp/gtfs/v1 index.ts"
+  }
+}
