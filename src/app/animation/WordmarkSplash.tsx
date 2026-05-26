@@ -19,15 +19,15 @@ const SplashAnimation = memo(function SplashAnimation() {
         .timeline({ defaults: { ease: "expo.out" } })
         .to("#wordmark", { opacity: 1, xPercent: 5 }, 0)
         .to("#tram", { xPercent: 25, opacity: 1 }, 0)
-        .to("#name", { opacity: 1 }, 0);
-      // .to(container.current, {
-      //   opacity: 0,
-      //   delay: 1,
-      //   animation: 100,
-      //   onComplete: () => {
-      //     setDone(true);
-      //   },
-      // });
+        .to("#name", { opacity: 1 }, 0)
+        .to(container.current, {
+          opacity: 0,
+          delay: 1,
+          animation: 100,
+          onComplete: () => {
+            setDone(true);
+          },
+        });
     },
     { scope: container },
   );
